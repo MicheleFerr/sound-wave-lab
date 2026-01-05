@@ -1,12 +1,13 @@
 // src/app/admin/layout.tsx
 import Link from 'next/link'
-import { LayoutDashboard, Package, FolderOpen, ShoppingCart, Settings, ArrowLeft } from 'lucide-react'
+import { LayoutDashboard, Package, FolderOpen, ShoppingCart, Settings, ArrowLeft, Tag } from 'lucide-react'
 
 const adminNav = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Prodotti', href: '/admin/products', icon: Package },
   { label: 'Categorie', href: '/admin/categorie', icon: FolderOpen },
   { label: 'Ordini', href: '/admin/ordini', icon: ShoppingCart },
+  { label: 'Coupon', href: '/admin/coupons', icon: Tag },
   { label: 'Impostazioni', href: '/admin/settings', icon: Settings },
 ]
 
