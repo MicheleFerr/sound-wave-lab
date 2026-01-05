@@ -100,8 +100,8 @@ export async function Header() {
           </nav>
 
         {/* Actions */}
-        <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+        <div className="flex items-center space-x-1 md:space-x-2">
+          <Button variant="ghost" size="icon" asChild>
             <Link href="/search" aria-label="Cerca">
               <Search className="h-5 w-5" />
             </Link>

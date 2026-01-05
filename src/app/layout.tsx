@@ -5,7 +5,6 @@ import { ThemeProvider } from 'next-themes'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { MobileNav } from '@/components/layout/MobileNav'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -67,11 +66,10 @@ export default function RootLayout({
         >
           <div className="relative flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1 pb-20 md:pb-0">
+            <main className="flex-1">
               {children}
             </main>
             <Footer />
-            <MobileNav />
           </div>
           <CartDrawer />
           <Toaster />
