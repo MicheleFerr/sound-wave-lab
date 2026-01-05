@@ -117,31 +117,15 @@ export async function GET(
 
         {/* Icon */}
         <svg
-          width="120"
-          height="120"
+          width="140"
+          height="140"
           viewBox="0 0 24 24"
           fill="none"
           stroke="white"
           strokeWidth="2"
-          style={{ marginBottom: 30 }}
         >
           <path d={iconPath} />
         </svg>
-
-        {/* Category name */}
-        <div
-          style={{
-            fontSize: 32,
-            fontWeight: 600,
-            color: 'white',
-            textTransform: 'uppercase',
-            letterSpacing: '4px',
-            textAlign: 'center',
-            padding: '0 40px',
-          }}
-        >
-          {categoryName}
-        </div>
       </div>
     ),
     {

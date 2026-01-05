@@ -137,7 +137,7 @@ export default async function ContattiPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-brand-gradient bg-brand-gradient-hover"
+                  className="w-full bg-brand-gradient bg-brand-gradient-hover text-white"
                 >
                   Invia messaggio
                 </Button>

@@ -165,7 +165,7 @@ export function RegisterForm() {
 
       <Button
         type="submit"
-        className="w-full bg-brand-gradient bg-brand-gradient-hover"
+        className="w-full bg-brand-gradient bg-brand-gradient-hover text-white"
         disabled={loading}
       >
         {loading ? (
