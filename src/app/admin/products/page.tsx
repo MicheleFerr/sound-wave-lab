@@ -68,7 +68,7 @@ export default async function AdminProductsPage() {
             Gestisci il catalogo prodotti
           </p>
         </div>
-        <Button className="bg-brand-gradient bg-brand-gradient-hover text-white" asChild>
+        <Button className="bg-brand-gradient bg-brand-gradient-hover !text-white" asChild>
           <Link href="/admin/products/nuovo">
             <Plus className="mr-2 h-4 w-4" />
             Nuovo Prodotto

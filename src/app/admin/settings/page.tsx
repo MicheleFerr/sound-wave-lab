@@ -36,6 +36,7 @@ export default async function AdminSettingsPage() {
   }, {} as Record<string, typeof settings>)
 
   const categoryLabels: Record<string, string> = {
+    header: 'Header',
     homepage: 'Homepage',
     footer: 'Footer',
     contact: 'Contatti',

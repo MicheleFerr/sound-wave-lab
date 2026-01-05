@@ -56,7 +56,7 @@ export function SearchForm({ initialQuery = '' }: SearchFormProps) {
             </button>
           )}
         </div>
-        <Button type="submit" size="lg" className="bg-brand-gradient hover:opacity-90">
+        <Button type="submit" size="lg" className="bg-brand-gradient hover:opacity-90 !text-white">
           <Search className="h-5 w-5 md:mr-2" />
           <span className="hidden md:inline">Cerca</span>
         </Button>

@@ -95,7 +95,7 @@ function CheckoutContent() {
             <p className="text-muted-foreground mb-8">
               Aggiungi qualche prodotto prima di procedere al checkout!
             </p>
-            <Button asChild className="bg-brand-gradient hover:opacity-90 text-white">
+            <Button asChild className="bg-brand-gradient hover:opacity-90 !text-white">
               <Link href="/products">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Torna al negozio

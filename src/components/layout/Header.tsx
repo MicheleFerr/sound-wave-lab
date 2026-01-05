@@ -7,9 +7,49 @@ import { UserMenu } from './UserMenu'
 import { HeaderLogo, MobileLogo } from './SiteLogo'
 import { createClient } from '@/lib/supabase/server'
 
+interface NavLink {
+  text: string
+  url: string
+}
+
+async function getHeaderSettings() {
+  const supabase = await createClient()
+
+  const { data: settings } = await supabase
+    .from('site_settings')
+    .select('key, value')
+    .eq('category', 'header')
+
+  const navLinks: NavLink[] = []
+  let announcement = ''
+
+  settings?.forEach(setting => {
+    if (setting.key === 'header_nav_links' && Array.isArray(setting.value)) {
+      navLinks.push(...setting.value as NavLink[])
+    }
+    if (setting.key === 'header_announcement' && typeof setting.value === 'string') {
+      announcement = setting.value
+    }
+  })
+
+  // Default links if none configured
+  if (navLinks.length === 0) {
+    navLinks.push(
+      { text: 'Catalogo', url: '/products' },
+      { text: 'Novità', url: '/products?sort=newest' },
+      { text: 'Chi Siamo', url: '/chi-siamo' }
+    )
+  }
+
+  return { navLinks, announcement }
+}
+
 export async function Header() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const [{ data: { user } }, headerSettings] = await Promise.all([
+    supabase.auth.getUser(),
+    getHeaderSettings()
+  ])
 
   let profile = null
   if (user) {
@@ -21,33 +61,43 @@ export async function Header() {
     profile = data
   }
 
-  return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
-        {/* Logo */}
-        <div className="flex items-center">
-          {/* Desktop Logo */}
-          <div className="hidden md:block">
-            <HeaderLogo width={130} height={38} />
-          </div>
-          {/* Mobile Logo */}
-          <div className="block md:hidden">
-            <MobileLogo width={90} height={28} />
-          </div>
-        </div>
+  const { navLinks, announcement } = headerSettings
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/products" className="text-sm font-medium hover:text-primary transition-colors">
-            Catalogo
-          </Link>
-          <Link href="/products?category=synth" className="text-sm font-medium hover:text-primary transition-colors">
-            Synth
-          </Link>
-          <Link href="/products?category=dj" className="text-sm font-medium hover:text-primary transition-colors">
-            DJ
-          </Link>
-        </nav>
+  return (
+    <>
+      {/* Announcement Banner */}
+      {announcement && (
+        <div className="bg-brand-gradient text-white text-center py-2 px-4 text-sm font-medium">
+          {announcement}
+        </div>
+      )}
+
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
+          {/* Logo */}
+          <div className="flex items-center">
+            {/* Desktop Logo */}
+            <div className="hidden md:block">
+              <HeaderLogo width={130} height={38} />
+            </div>
+            {/* Mobile Logo */}
+            <div className="block md:hidden">
+              <MobileLogo width={90} height={28} />
+            </div>
+          </div>
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center space-x-6">
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                href={link.url}
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                {link.text}
+              </Link>
+            ))}
+          </nav>
 
         {/* Actions */}
         <div className="flex items-center space-x-2">
@@ -66,5 +116,6 @@ export async function Header() {
         </div>
       </div>
     </header>
+    </>
   )
 }

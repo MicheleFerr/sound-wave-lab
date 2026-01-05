@@ -58,4 +58,13 @@ INSERT INTO site_settings (key, value, category) VALUES
 ('store_name', '"Sound Wave Lab"', 'store'),
 ('store_currency', '"EUR"', 'store'),
 ('store_free_shipping_threshold', '50', 'store'),
-('store_shipping_cost', '4.99', 'store');
+('store_shipping_cost', '4.99', 'store'),
+
+-- Header Settings
+('header_nav_links', '[
+  {"text": "Catalogo", "url": "/products"},
+  {"text": "Novità", "url": "/products?sort=newest"},
+  {"text": "Chi Siamo", "url": "/chi-siamo"}
+]', 'header'),
+('header_show_search', 'true', 'header'),
+('header_announcement', '""', 'header');

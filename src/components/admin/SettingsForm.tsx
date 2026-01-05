@@ -66,6 +66,15 @@ const fieldConfigs: Record<string, { label: string; description?: string; type?:
   page_privacy_content: { label: 'Contenuto', type: 'textarea' },
   page_termini_title: { label: 'Titolo Pagina' },
   page_termini_content: { label: 'Contenuto', type: 'textarea' },
+
+  // Header
+  header_nav_1_text: { label: 'Link 1 - Testo' },
+  header_nav_1_url: { label: 'Link 1 - URL', description: 'Es: /products' },
+  header_nav_2_text: { label: 'Link 2 - Testo' },
+  header_nav_2_url: { label: 'Link 2 - URL', description: 'Es: /products?sort=newest' },
+  header_nav_3_text: { label: 'Link 3 - Testo' },
+  header_nav_3_url: { label: 'Link 3 - URL', description: 'Es: /chi-siamo' },
+  header_announcement: { label: 'Banner Annuncio', description: 'Testo mostrato sopra l\'header (lascia vuoto per nascondere)' },
 }
 
 // Extract simple value from setting
@@ -117,6 +126,19 @@ function extractValue(setting: Setting): Record<string, string> {
     return result
   }
 
+  // Handle header nav links - split into individual fields
+  if (setting.key === 'header_nav_links') {
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        if (typeof item === 'object' && item !== null) {
+          result[`header_nav_${index + 1}_text`] = item.text || ''
+          result[`header_nav_${index + 1}_url`] = item.url || ''
+        }
+      })
+    }
+    return result
+  }
+
   // Simple values - remove quotes if JSON string
   if (typeof value === 'string') {
     result[setting.key] = value
@@ -163,6 +185,19 @@ function reconstructValue(setting: Setting, formValues: Record<string, string>):
       title: formValues[`${setting.key}_title`],
       content: formValues[`${setting.key}_content`],
     }
+  }
+
+  // Header nav links - reconstruct array
+  if (setting.key === 'header_nav_links') {
+    const links = []
+    for (let i = 1; i <= 3; i++) {
+      const text = formValues[`header_nav_${i}_text`]
+      const url = formValues[`header_nav_${i}_url`]
+      if (text && url) {
+        links.push({ text, url })
+      }
+    }
+    return links
   }
 
   // Numbers
@@ -331,7 +366,7 @@ export function SettingsForm({ settings, category }: SettingsFormProps) {
       <Button
         type="submit"
         disabled={saving}
-        className="bg-brand-gradient bg-brand-gradient-hover text-white"
+        className="bg-brand-gradient bg-brand-gradient-hover !text-white"
       >
         {saving ? (
           <>

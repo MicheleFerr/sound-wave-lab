@@ -130,7 +130,7 @@ function CheckoutSuccessContent() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-brand-gradient hover:opacity-90 text-white">
+            <Button asChild className="bg-brand-gradient hover:opacity-90 !text-white">
               <Link href="/products">
                 Continua lo shopping
                 <ArrowRight className="ml-2 h-4 w-4" />
