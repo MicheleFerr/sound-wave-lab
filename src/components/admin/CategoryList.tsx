@@ -22,8 +22,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Plus, Edit, Trash2, Loader2, Save } from 'lucide-react'
+import { Plus, Edit, Trash2, Loader2, Save, Image as ImageIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { CategoryPlaceholder, COMMON_CATEGORIES } from '@/components/ui/category-placeholder'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface Category {
   id: string
@@ -66,6 +68,8 @@ function CategoryForm({
   const [sortOrder, setSortOrder] = useState(category?.sort_order || 0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [selectedPlaceholder, setSelectedPlaceholder] = useState<string | null>(null)
+  const [placeholderVariant, setPlaceholderVariant] = useState<'teal' | 'orange' | 'gradient'>('gradient')
 
   const handleNameChange = (value: string) => {
     setName(value)
@@ -156,13 +160,105 @@ function CategoryForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="imageUrl">URL Immagine</Label>
-        <Input
-          id="imageUrl"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          placeholder="https://..."
-        />
+        <Label>Immagine Categoria</Label>
+        <Tabs defaultValue="placeholder" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="placeholder">
+              <ImageIcon className="h-4 w-4 mr-2" />
+              Placeholder
+            </TabsTrigger>
+            <TabsTrigger value="url">URL Personalizzato</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="placeholder" className="space-y-4">
+            {/* Placeholder Variant Selector */}
+            <div className="space-y-2">
+              <Label>Stile Colore</Label>
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant={placeholderVariant === 'gradient' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setPlaceholderVariant('gradient')}
+                >
+                  Gradient
+                </Button>
+                <Button
+                  type="button"
+                  variant={placeholderVariant === 'teal' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setPlaceholderVariant('teal')}
+                >
+                  Teal
+                </Button>
+                <Button
+                  type="button"
+                  variant={placeholderVariant === 'orange' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setPlaceholderVariant('orange')}
+                >
+                  Orange
+                </Button>
+              </div>
+            </div>
+
+            {/* Placeholder Gallery */}
+            <div className="space-y-2">
+              <Label>Scegli Template</Label>
+              <div className="grid grid-cols-3 gap-3 max-h-[300px] overflow-y-auto p-2 border rounded-lg">
+                {COMMON_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => {
+                      setSelectedPlaceholder(cat)
+                      setImageUrl(`/api/placeholder/${cat.toLowerCase().replace(/\s+/g, '-')}?variant=${placeholderVariant}`)
+                    }}
+                    className={`relative group rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedPlaceholder === cat
+                        ? 'border-primary ring-2 ring-primary/20'
+                        : 'border-transparent hover:border-gray-300'
+                    }`}
+                  >
+                    <CategoryPlaceholder
+                      category={cat}
+                      variant={placeholderVariant}
+                      size="sm"
+                      className="w-full h-auto"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-white text-xs font-medium">{cat}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {selectedPlaceholder && (
+              <div className="p-3 bg-muted rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  ✓ Selezionato: <span className="font-medium">{selectedPlaceholder}</span> ({placeholderVariant})
+                </p>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="url" className="space-y-2">
+            <Label htmlFor="imageUrl">URL Immagine</Label>
+            <Input
+              id="imageUrl"
+              value={imageUrl}
+              onChange={(e) => {
+                setImageUrl(e.target.value)
+                setSelectedPlaceholder(null)
+              }}
+              placeholder="https://..."
+            />
+            <p className="text-xs text-muted-foreground">
+              Inserisci l'URL completo dell'immagine
+            </p>
+          </TabsContent>
+        </Tabs>
       </div>
 
       <div className="space-y-2">
@@ -266,7 +362,7 @@ export function CategoryList({ categories: initialCategories }: CategoryListProp
               Nuova Categoria
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingCategory ? 'Modifica Categoria' : 'Nuova Categoria'}

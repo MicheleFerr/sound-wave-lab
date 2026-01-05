@@ -42,10 +42,16 @@ async function getCategories() {
 }
 
 export default async function Home() {
-  const [featuredProducts, categories] = await Promise.all([
+  const [rawFeaturedProducts, categories] = await Promise.all([
     getFeaturedProducts(),
     getCategories(),
   ])
+
+  const featuredProducts = rawFeaturedProducts.map(product => ({
+    ...product,
+    category: Array.isArray(product.category) ? product.category[0] : product.category
+  }))
+
 
   return (
     <div className="flex flex-col">
@@ -124,6 +130,7 @@ export default async function Home() {
                     alt={category.name}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    unoptimized={category.image_url.startsWith('/api/placeholder')}
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full">

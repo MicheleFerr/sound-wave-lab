@@ -140,7 +140,9 @@ export default async function AdminDashboard() {
                 <div>
                   <p className="font-medium">{product.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {product.category?.name || 'Nessuna categoria'}
+                    {(Array.isArray(product.category)
+                      ? product.category[0]?.name
+                      : (product.category as any)?.name) || 'Nessuna categoria'}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

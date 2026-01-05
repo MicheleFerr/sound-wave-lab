@@ -113,11 +113,16 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const params = await searchParams
   const { category, sort, search } = params
 
-  const [products, categories, categoryName] = await Promise.all([
+  const [productsRaw, categories, categoryName] = await Promise.all([
     getProducts(category, sort, search),
     getCategories(),
     getCategoryName(category),
   ])
+
+  const products = productsRaw.map(p => ({
+    ...p,
+    category: Array.isArray(p.category) ? p.category[0] : p.category
+  }))
 
   const pageTitle = categoryName ? `Collezione ${categoryName}` : 'Tutti i Prodotti'
   const pageDescription = categoryName

@@ -76,15 +76,26 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params
-  const product = await getProduct(slug)
+  const productRaw = await getProduct(slug)
 
-  if (!product) {
+  if (!productRaw) {
     notFound()
   }
 
-  const relatedProducts = product.category_id
+  // Normalize product category
+  const product = {
+    ...productRaw,
+    category: Array.isArray(productRaw.category) ? productRaw.category[0] : productRaw.category
+  }
+
+  const relatedProductsRaw = product.category_id
     ? await getRelatedProducts(product.category_id, product.id)
     : []
+  
+  const relatedProducts = relatedProductsRaw.map(p => ({
+    ...p,
+    category: Array.isArray(p.category) ? p.category[0] : p.category
+  }))
 
   const lowestPrice = Math.min(...product.variants.map(v => v.price))
   const highestComparePrice = Math.max(...product.variants.map(v => v.compare_at_price || 0))

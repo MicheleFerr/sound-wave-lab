@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     dangerouslyAllowSVG: true,
+    localPatterns: [
+      {
+        pathname: '/api/placeholder/**',
+        search: '',
+      },
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -13,6 +19,7 @@ const nextConfig: NextConfig = {
         hostname: 'fcfzxgvttqsslhijwjoy.supabase.co',
       },
     ],
+    unoptimized: false,
   },
 };
 

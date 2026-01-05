@@ -70,6 +70,7 @@ export function SiteLogo({
       height={finalHeight}
       className={className}
       priority={priority}
+      unoptimized={format === 'svg'}
     />
   )
 

@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     const orderNumber = generateOrderNumber()
 
     // Create line items for Stripe
-    const lineItems = items.map((item) => ({
+    const lineItems: any[] = items.map((item) => ({
       price_data: {
         currency: 'eur',
         product_data: {

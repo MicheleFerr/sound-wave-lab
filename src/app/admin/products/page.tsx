@@ -175,7 +175,9 @@ export default async function AdminProductsPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      {product.category?.name || '-'}
+                      {(Array.isArray(product.category)
+                        ? product.category[0]?.name
+                        : (product.category as any)?.name) || '-'}
                     </TableCell>
                     <TableCell>
                       €{lowestPrice.toFixed(2)}

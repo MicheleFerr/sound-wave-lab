@@ -57,7 +57,12 @@ function ProductGridSkeleton() {
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams
   const query = params.q || ''
-  const products = await searchProducts(query)
+  const productsRaw = await searchProducts(query)
+
+  const products = productsRaw.map(p => ({
+    ...p,
+    category: Array.isArray(p.category) ? p.category[0] : p.category
+  }))
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950">
