@@ -12,8 +12,43 @@ import { Toaster } from '@/components/ui/sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Sound Wave Lab - Magliette per amanti della musica',
-  description: 'E-commerce di magliette uniche a tema musica elettronica, synth, DJ e tecnologia.',
+  title: 'SoundwaveLab Tech - Pro Audio Plugins & Sound Design Tools',
+  description: 'Premium audio plugins, virtual instruments, sound libraries and mixing tools for music producers, sound designers and audio professionals.',
+  keywords: ['audio plugins', 'VST', 'virtual instruments', 'sound design', 'mixing', 'mastering', 'DAW', 'music production'],
+  authors: [{ name: 'SoundwaveLab Tech' }],
+  creator: 'SoundwaveLab Tech',
+  publisher: 'SoundwaveLab Tech',
+  icons: {
+    icon: [
+      { url: '/logos/favicon/icon.svg', type: 'image/svg+xml' },
+      { url: '/logos/favicon/icon.png', sizes: '32x32', type: 'image/png' }
+    ],
+    apple: [
+      { url: '/logos/favicon/icon.png', sizes: '180x180', type: 'image/png' }
+    ]
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'it_IT',
+    url: 'https://soundwavelab.tech',
+    title: 'SoundwaveLab Tech - Pro Audio Plugins & Sound Design Tools',
+    description: 'Premium audio plugins, virtual instruments, sound libraries and mixing tools for music producers.',
+    siteName: 'SoundwaveLab Tech',
+    images: [
+      {
+        url: '/logos/social/logo-square.png',
+        width: 1200,
+        height: 1200,
+        alt: 'SoundwaveLab Tech Logo'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SoundwaveLab Tech - Pro Audio Plugins',
+    description: 'Premium audio plugins and sound design tools for music producers.',
+    images: ['/logos/social/logo-square.png']
+  }
 }
 
 export default function RootLayout({

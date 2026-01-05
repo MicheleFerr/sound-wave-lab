@@ -123,3 +123,96 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Brand Colors: Sound Wave Lab */
+:root {
+  --brand-teal: #14595E;
+  --brand-teal-light: #1a7078;
+  --brand-teal-dark: #0f4448;
+  --brand-gold: #FFB753;
+  --brand-gold-light: #ffc36d;
+  --brand-gold-dark: #e5a347;
+}
+
+/* Brand gradient utilities */
+.bg-brand-gradient {
+  background: linear-gradient(to right, var(--brand-teal), var(--brand-gold));
+}
+
+.bg-brand-gradient-hover:hover {
+  background: linear-gradient(to right, var(--brand-teal-dark), var(--brand-gold-dark));
+}
+
+.text-brand-gradient {
+  background: linear-gradient(to right, var(--brand-teal), var(--brand-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-brand-gradient {
+  border-image: linear-gradient(to right, var(--brand-teal), var(--brand-gold)) 1;
+}
+
+/* Brand color utilities */
+.text-brand-teal { color: #14595E; }
+.text-brand-teal-light { color: #1a7078; }
+.text-brand-gold { color: #FFB753; }
+.bg-brand-teal { background-color: #14595E; }
+.bg-brand-teal\/10 { background-color: rgba(20, 89, 94, 0.1); }
+.bg-brand-teal\/20 { background-color: rgba(20, 89, 94, 0.2); }
+.bg-brand-teal\/30 { background-color: rgba(20, 89, 94, 0.3); }
+.bg-brand-gold { background-color: #FFB753; }
+.bg-brand-gold\/10 { background-color: rgba(255, 183, 83, 0.1); }
+.bg-brand-gold\/20 { background-color: rgba(255, 183, 83, 0.2); }
+.border-brand-teal { border-color: #14595E; }
+.border-brand-teal\/30 { border-color: rgba(20, 89, 94, 0.3); }
+.ring-brand-teal { --tw-ring-color: #14595E; }
+.ring-brand-teal\/30 { --tw-ring-color: rgba(20, 89, 94, 0.3); }
+
+/* Brand gradient backgrounds */
+.bg-brand-gradient-subtle {
+  background: linear-gradient(to bottom right, rgba(20, 89, 94, 0.05), rgba(255, 183, 83, 0.05));
+}
+.bg-brand-gradient-light {
+  background: linear-gradient(to bottom right, rgba(20, 89, 94, 0.1), rgba(255, 183, 83, 0.1));
+}
+.bg-brand-gradient-medium {
+  background: linear-gradient(to bottom right, rgba(20, 89, 94, 0.2), rgba(255, 183, 83, 0.2));
+}
+.bg-brand-gradient-strong {
+  background: linear-gradient(to bottom right, rgba(20, 89, 94, 0.3), rgba(255, 183, 83, 0.3));
+}
+
+/* Container configuration */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}

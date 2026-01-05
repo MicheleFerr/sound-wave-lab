@@ -119,7 +119,7 @@ export function Footer() {
               <h3 className="font-bold text-lg mb-4">Sound Wave Lab</h3>
             </Link>
             <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-              Magliette uniche per amanti della musica elettronica, sintetizzatori e tecnologia audio.
+              Magliette uniche con design originali per chi ama distinguersi.
             </p>
 
             {/* Social Links */}
