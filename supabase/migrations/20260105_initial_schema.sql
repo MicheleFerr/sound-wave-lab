@@ -1,7 +1,6 @@
 -- supabase/schema.sql
 
 -- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =============================================
 -- PROFILES (extends Supabase Auth)
