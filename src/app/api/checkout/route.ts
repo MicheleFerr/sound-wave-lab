@@ -15,6 +15,12 @@ interface CartItem {
   imageUrl: string
 }
 
+interface CouponData {
+  id: string
+  code: string
+  discount_amount: number
+}
+
 interface CheckoutRequest {
   items: CartItem[]
   shippingAddress: {
@@ -27,6 +33,7 @@ interface CheckoutRequest {
     phone: string
   }
   email: string
+  coupon?: CouponData | null
 }
 
 const SHIPPING_COST = 499 // 4.99€ in cents
@@ -41,7 +48,7 @@ function generateOrderNumber(): string {
 export async function POST(request: NextRequest) {
   try {
     const body: CheckoutRequest = await request.json()
-    const { items, shippingAddress, email } = body
+    const { items, shippingAddress, email, coupon } = body
 
     if (!items || items.length === 0) {
       return NextResponse.json(
@@ -63,7 +70,9 @@ export async function POST(request: NextRequest) {
       0
     )
     const shippingCost = subtotalCents >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST
-    const totalCents = subtotalCents + shippingCost
+    const discountCents = coupon ? Math.round(coupon.discount_amount * 100) : 0
+    const totalCents = Math.max(0, subtotalCents + shippingCost - discountCents)
+    const isFreeOrder = totalCents === 0
 
     // Get current user if logged in
     const supabase = await createClient()
@@ -72,7 +81,98 @@ export async function POST(request: NextRequest) {
     // Generate order number
     const orderNumber = generateOrderNumber()
 
-    // Create line items for Stripe
+    // Helper function to create order and order items
+    const createOrderInDatabase = async (status: string, stripeSessionId: string | null) => {
+      const { error: orderError } = await supabase.from('orders').insert({
+        order_number: orderNumber,
+        user_id: user?.id || null,
+        stripe_session_id: stripeSessionId,
+        status,
+        subtotal: subtotalCents / 100,
+        shipping_cost: shippingCost / 100,
+        discount_amount: discountCents / 100,
+        total: totalCents / 100,
+        coupon_id: coupon?.id || null,
+        coupon_code: coupon?.code || null,
+        shipping_address: {
+          ...shippingAddress,
+          email,
+        },
+      })
+
+      if (orderError) {
+        console.error('Error creating order:', orderError)
+        return null
+      }
+
+      // Get the created order ID for order items
+      const { data: orderData } = await supabase
+        .from('orders')
+        .select('id')
+        .eq('order_number', orderNumber)
+        .single()
+
+      if (orderData) {
+        // Create order items
+        const orderItems = items.map((item) => ({
+          order_id: orderData.id,
+          variant_id: item.variantId,
+          product_name: item.productName,
+          variant_sku: item.variantSku,
+          variant_attributes: item.attributes,
+          unit_price: item.price,
+          quantity: item.quantity,
+          total_price: item.price * item.quantity,
+        }))
+
+        await supabase.from('order_items').insert(orderItems)
+      }
+
+      return orderData
+    }
+
+    // Update coupon usage count if coupon was used
+    const updateCouponUsage = async () => {
+      if (coupon?.id) {
+        await supabase.rpc('increment_coupon_usage', { coupon_id: coupon.id }).catch(() => {
+          // If RPC doesn't exist, do manual update
+          supabase
+            .from('coupons')
+            .update({ current_uses: supabase.rpc('current_uses + 1') })
+            .eq('id', coupon.id)
+        })
+      }
+    }
+
+    // Handle FREE orders (100% discount)
+    if (isFreeOrder) {
+      // Create order directly as paid
+      const orderData = await createOrderInDatabase('paid', null)
+
+      if (!orderData) {
+        return NextResponse.json(
+          { error: 'Errore durante la creazione dell\'ordine' },
+          { status: 500 }
+        )
+      }
+
+      // Update coupon usage
+      if (coupon?.id) {
+        await supabase
+          .from('coupons')
+          .update({ current_uses: supabase.sql`current_uses + 1` })
+          .eq('id', coupon.id)
+      }
+
+      // Redirect directly to success page with order number
+      return NextResponse.json({
+        sessionId: null,
+        url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?order=${orderNumber}`,
+        freeOrder: true,
+      })
+    }
+
+    // For PAID orders, create Stripe Checkout Session
     const lineItems: any[] = items.map((item) => ({
       price_data: {
         currency: 'eur',
@@ -101,8 +201,6 @@ export async function POST(request: NextRequest) {
           product_data: {
             name: 'Spedizione Standard',
             description: 'Consegna in 3-5 giorni lavorativi',
-            images: undefined,
-            metadata: {},
           },
           unit_amount: shippingCost,
         },
@@ -110,8 +208,8 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
+    // Create Stripe Checkout Session with discount if applicable
+    const sessionConfig: any = {
       payment_method_types: ['card'],
       mode: 'payment',
       line_items: lineItems,
@@ -119,6 +217,8 @@ export async function POST(request: NextRequest) {
       metadata: {
         order_number: orderNumber,
         user_id: user?.id || '',
+        coupon_id: coupon?.id || '',
+        coupon_code: coupon?.code || '',
         shipping_address: JSON.stringify(shippingAddress),
         items: JSON.stringify(items.map(item => ({
           variantId: item.variantId,
@@ -144,50 +244,25 @@ export async function POST(request: NextRequest) {
       ] : undefined,
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout?canceled=true`,
-    })
+    }
+
+    // Add discount as a coupon in Stripe if applicable
+    if (discountCents > 0) {
+      // Create a one-time coupon in Stripe for this checkout
+      const stripeCoupon = await stripe.coupons.create({
+        amount_off: discountCents,
+        currency: 'eur',
+        name: coupon?.code || 'Discount',
+        duration: 'once',
+      })
+
+      sessionConfig.discounts = [{ coupon: stripeCoupon.id }]
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionConfig)
 
     // Create pending order in database
-    const { error: orderError } = await supabase.from('orders').insert({
-      order_number: orderNumber,
-      user_id: user?.id || null,
-      stripe_session_id: session.id,
-      status: 'pending',
-      subtotal: subtotalCents / 100,
-      shipping_cost: shippingCost / 100,
-      total: totalCents / 100,
-      shipping_address: {
-        ...shippingAddress,
-        email,
-      },
-    })
-
-    if (orderError) {
-      console.error('Error creating order:', orderError)
-      // Don't fail the checkout, we'll create the order in webhook if needed
-    }
-
-    // Get the created order ID for order items
-    const { data: orderData } = await supabase
-      .from('orders')
-      .select('id')
-      .eq('order_number', orderNumber)
-      .single()
-
-    if (orderData) {
-      // Create order items
-      const orderItems = items.map((item) => ({
-        order_id: orderData.id,
-        variant_id: item.variantId,
-        product_name: item.productName,
-        variant_sku: item.variantSku,
-        variant_attributes: item.attributes,
-        unit_price: item.price,
-        quantity: item.quantity,
-        total_price: item.price * item.quantity,
-      }))
-
-      await supabase.from('order_items').insert(orderItems)
-    }
+    await createOrderInDatabase('pending', session.id)
 
     return NextResponse.json({
       sessionId: session.id,

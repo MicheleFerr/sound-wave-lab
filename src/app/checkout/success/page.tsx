@@ -16,6 +16,7 @@ interface OrderDetails {
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
+  const orderNumber = searchParams.get('order') // For free orders
   const { clearCart } = useCartStore()
 
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null)
@@ -32,26 +33,53 @@ function CheckoutSuccessContent() {
 
   useEffect(() => {
     async function fetchOrderDetails() {
-      if (!sessionId) {
-        setLoading(false)
+      // Handle Stripe session
+      if (sessionId) {
+        try {
+          const response = await fetch(`/api/checkout/session?session_id=${sessionId}`)
+          if (response.ok) {
+            const data = await response.json()
+            setOrderDetails(data)
+          }
+        } catch (error) {
+          console.error('Error fetching order details:', error)
+        } finally {
+          setLoading(false)
+        }
         return
       }
 
-      try {
-        const response = await fetch(`/api/checkout/session?session_id=${sessionId}`)
-        if (response.ok) {
-          const data = await response.json()
-          setOrderDetails(data)
+      // Handle free orders with order number
+      if (orderNumber) {
+        try {
+          const response = await fetch(`/api/orders/${orderNumber}`)
+          if (response.ok) {
+            const data = await response.json()
+            setOrderDetails({
+              orderNumber: data.order_number,
+              email: data.shipping_address?.email || '',
+              total: data.total,
+            })
+          }
+        } catch (error) {
+          console.error('Error fetching order details:', error)
+          // Still show basic success message for free orders
+          setOrderDetails({
+            orderNumber: orderNumber,
+            email: '',
+            total: 0,
+          })
+        } finally {
+          setLoading(false)
         }
-      } catch (error) {
-        console.error('Error fetching order details:', error)
-      } finally {
-        setLoading(false)
+        return
       }
+
+      setLoading(false)
     }
 
     fetchOrderDetails()
-  }, [sessionId])
+  }, [sessionId, orderNumber])
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950">
@@ -89,7 +117,7 @@ function CheckoutSuccessContent() {
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Totale:</span>
                     <span className="font-bold text-brand-teal">
-                      €{orderDetails.total.toFixed(2)}
+                      {orderDetails.total === 0 ? 'Gratuito' : `€${orderDetails.total.toFixed(2)}`}
                     </span>
                   </div>
                 </div>

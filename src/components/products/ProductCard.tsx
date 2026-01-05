@@ -66,9 +66,9 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          {/* Quick add button - visible on hover (desktop) */}
-          <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:block">
-            <Button className="w-full" size="sm">
+          {/* Quick add button - always visible with backdrop */}
+          <div className="absolute bottom-2 left-2 right-2 transition-all duration-300 hidden md:block">
+            <Button className="w-full bg-brand-gradient hover:opacity-90 !text-white shadow-lg" size="sm">
               <ShoppingBag className="h-4 w-4 mr-2" />
               Aggiungi al carrello
             </Button>
@@ -104,7 +104,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Mobile add button */}
-        <Button className="w-full mt-3 md:hidden" size="sm">
+        <Button className="w-full mt-3 md:hidden bg-brand-gradient hover:opacity-90 !text-white" size="sm">
           <ShoppingBag className="h-4 w-4 mr-2" />
           Aggiungi
         </Button>

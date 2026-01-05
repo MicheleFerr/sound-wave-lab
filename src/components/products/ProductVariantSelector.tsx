@@ -238,7 +238,7 @@ export function ProductVariantSelector({
         <Button
           size="lg"
           className={cn(
-            'flex-1 h-12 text-base font-semibold transition-all',
+            'flex-1 h-12 text-base font-semibold transition-all !text-white',
             isAdding
               ? 'bg-green-500 hover:bg-green-500'
               : 'bg-brand-gradient bg-brand-gradient-hover'
