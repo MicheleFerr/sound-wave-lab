@@ -582,7 +582,7 @@ export function ProductForm({ product, categories, isEdit = false }: ProductForm
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-brand-gradient bg-brand-gradient-hover"
+                className="w-full bg-brand-gradient bg-brand-gradient-hover text-white"
               >
                 {loading ? (
                   <>

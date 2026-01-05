@@ -28,7 +28,17 @@ async function getStats() {
   }
 }
 
-async function getRecentProducts() {
+interface RecentProduct {
+  id: string
+  name: string
+  slug: string
+  is_active: boolean
+  is_featured: boolean
+  created_at: string
+  category: { name: string } | null
+}
+
+async function getRecentProducts(): Promise<RecentProduct[]> {
   const supabase = await createClient()
 
   const { data: products } = await supabase
@@ -45,7 +55,11 @@ async function getRecentProducts() {
     .order('created_at', { ascending: false })
     .limit(5)
 
-  return products || []
+  // Transform array relations to single objects
+  return (products || []).map((p) => ({
+    ...p,
+    category: Array.isArray(p.category) ? p.category[0] || null : p.category,
+  })) as RecentProduct[]
 }
 
 export default async function AdminDashboard() {
@@ -140,9 +154,7 @@ export default async function AdminDashboard() {
                 <div>
                   <p className="font-medium">{product.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    {(Array.isArray(product.category)
-                      ? product.category[0]?.name
-                      : (product.category as any)?.name) || 'Nessuna categoria'}
+                    {product.category?.name || 'Nessuna categoria'}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

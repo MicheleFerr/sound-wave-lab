@@ -287,7 +287,7 @@ function CategoryForm({
         <Button
           type="submit"
           disabled={loading}
-          className="bg-brand-gradient bg-brand-gradient-hover"
+          className="bg-brand-gradient bg-brand-gradient-hover text-white"
         >
           {loading ? (
             <>
@@ -356,7 +356,7 @@ export function CategoryList({ categories: initialCategories }: CategoryListProp
           <DialogTrigger asChild>
             <Button
               onClick={openNewDialog}
-              className="bg-brand-gradient bg-brand-gradient-hover"
+              className="bg-brand-gradient bg-brand-gradient-hover text-white"
             >
               <Plus className="mr-2 h-4 w-4" />
               Nuova Categoria

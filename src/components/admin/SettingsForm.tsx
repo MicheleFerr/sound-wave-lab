@@ -331,7 +331,7 @@ export function SettingsForm({ settings, category }: SettingsFormProps) {
       <Button
         type="submit"
         disabled={saving}
-        className="bg-brand-gradient bg-brand-gradient-hover"
+        className="bg-brand-gradient bg-brand-gradient-hover text-white"
       >
         {saving ? (
           <>
