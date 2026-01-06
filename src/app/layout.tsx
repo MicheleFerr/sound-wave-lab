@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { PromoBanner } from '@/components/layout/PromoBanner'
 import { CartDrawer } from '@/components/cart/CartDrawer'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -65,6 +66,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="relative flex min-h-screen flex-col">
+            <PromoBanner />
             <Header />
             <main className="flex-1">
               {children}

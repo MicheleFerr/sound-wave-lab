@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus, Trash2, Loader2, Tag, Percent, Euro } from 'lucide-react'
+import { Plus, Trash2, Loader2, Tag, Percent, Euro, Megaphone } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -46,6 +46,7 @@ interface Coupon {
   valid_from: string
   valid_until: string | null
   created_at: string
+  banner_enabled: boolean
 }
 
 interface CouponListProps {
@@ -136,6 +137,37 @@ export function CouponList({ coupons }: CouponListProps) {
       router.refresh()
     } catch (error) {
       console.error('Error updating coupon:', error)
+    }
+  }
+
+  const handleToggleBanner = async (coupon: Coupon) => {
+    // Can only enable banner if coupon is active
+    if (!coupon.is_active && !coupon.banner_enabled) {
+      alert('Il coupon deve essere attivo per mostrarlo nel banner')
+      return
+    }
+
+    try {
+      const supabase = createClient()
+
+      // If enabling this banner, first disable all others
+      if (!coupon.banner_enabled) {
+        await supabase
+          .from('coupons')
+          .update({ banner_enabled: false })
+          .neq('id', coupon.id)
+      }
+
+      const { error } = await supabase
+        .from('coupons')
+        .update({ banner_enabled: !coupon.banner_enabled })
+        .eq('id', coupon.id)
+
+      if (error) throw error
+
+      router.refresh()
+    } catch (error) {
+      console.error('Error updating banner:', error)
     }
   }
 
@@ -277,6 +309,7 @@ export function CouponList({ coupons }: CouponListProps) {
               <TableHead>Sconto</TableHead>
               <TableHead>Utilizzi</TableHead>
               <TableHead>Stato</TableHead>
+              <TableHead>Banner</TableHead>
               <TableHead className="w-[100px]">Azioni</TableHead>
             </TableRow>
           </TableHeader>
@@ -324,6 +357,20 @@ export function CouponList({ coupons }: CouponListProps) {
                   >
                     {coupon.is_active ? 'Attivo' : 'Disattivo'}
                   </Badge>
+                </TableCell>
+                <TableCell>
+                  <button
+                    onClick={() => handleToggleBanner(coupon)}
+                    className={`p-2 rounded-md transition-colors ${
+                      coupon.banner_enabled
+                        ? 'bg-black text-white hover:bg-zinc-800'
+                        : 'bg-zinc-100 text-zinc-400 hover:bg-zinc-200 hover:text-zinc-600'
+                    } ${!coupon.is_active ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={!coupon.is_active && !coupon.banner_enabled}
+                    title={coupon.banner_enabled ? 'Rimuovi dal banner' : 'Mostra nel banner'}
+                  >
+                    <Megaphone className="h-4 w-4" />
+                  </button>
                 </TableCell>
                 <TableCell>
                   <Button

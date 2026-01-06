@@ -16,6 +16,7 @@ interface Coupon {
   valid_from: string
   valid_until: string | null
   created_at: string
+  banner_enabled: boolean
 }
 
 async function getCoupons(): Promise<Coupon[]> {
