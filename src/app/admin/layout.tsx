@@ -1,7 +1,7 @@
 // src/app/admin/layout.tsx
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LayoutDashboard, Package, FolderOpen, ShoppingCart, Settings, ArrowLeft, Tag, Palette } from 'lucide-react'
+import { LayoutDashboard, Package, FolderOpen, ShoppingCart, Settings, ArrowLeft, Tag, Palette, CreditCard } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 
 const adminNav = [
@@ -10,6 +10,7 @@ const adminNav = [
   { label: 'Categorie', href: '/admin/categorie', icon: FolderOpen },
   { label: 'Ordini', href: '/admin/ordini', icon: ShoppingCart },
   { label: 'Coupon', href: '/admin/coupons', icon: Tag },
+  { label: 'Stripe', href: '/admin/stripe', icon: CreditCard },
   { label: 'Personalizzazione', href: '/admin/personalizzazione', icon: Palette },
   { label: 'Impostazioni', href: '/admin/settings', icon: Settings },
 ]
