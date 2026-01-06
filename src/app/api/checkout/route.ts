@@ -4,6 +4,7 @@ import { randomBytes } from 'crypto'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { checkoutRateLimiter, checkRateLimit } from '@/lib/rate-limit'
+import { sendOrderConfirmationEmail } from '@/lib/email/send'
 
 // Lazy load stripe only when needed (for paid orders)
 const getStripe = async () => {
@@ -222,6 +223,30 @@ export async function POST(request: NextRequest) {
       if (coupon?.id) {
         await supabaseAdmin.rpc('increment_coupon_usage', { coupon_id_param: coupon.id })
       }
+
+      // Send order confirmation email (don't await to not block response)
+      sendOrderConfirmationEmail({
+        orderNumber,
+        customerName: shippingAddress.fullName,
+        customerEmail: email,
+        items: items.map(item => ({
+          name: item.productName,
+          quantity: item.quantity,
+          price: priceMap.get(item.variantId)!.price,
+          attributes: item.attributes,
+        })),
+        subtotal: subtotalCents / 100,
+        shippingCost: shippingCost / 100,
+        discountAmount: discountCents / 100,
+        total: totalCents / 100,
+        shippingAddress: {
+          street: shippingAddress.street,
+          city: shippingAddress.city,
+          province: shippingAddress.province,
+          postalCode: shippingAddress.postalCode,
+          country: shippingAddress.country,
+        },
+      }).catch(err => console.error('Failed to send order email:', err))
 
       // Redirect directly to success page with order number (and token for guests)
       const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || ''

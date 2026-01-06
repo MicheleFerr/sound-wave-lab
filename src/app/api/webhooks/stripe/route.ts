@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 import { stripe } from '@/lib/stripe/server'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
+import { sendOrderConfirmationEmail } from '@/lib/email/send'
 
 // Use service role client for webhook operations
 const supabase = createClient(
@@ -127,6 +128,35 @@ export async function POST(request: NextRequest) {
                 .eq('id', item.variantId)
             }
           }
+        }
+
+        // Send order confirmation email
+        if (session.metadata) {
+          const shippingAddress = JSON.parse(session.metadata.shipping_address || '{}')
+          const items = JSON.parse(session.metadata.items || '[]')
+
+          sendOrderConfirmationEmail({
+            orderNumber: session.metadata.order_number || '',
+            customerName: shippingAddress.fullName || '',
+            customerEmail: session.customer_email || '',
+            items: items.map((item: { productName: string; quantity: number; price: number; attributes?: Record<string, string> }) => ({
+              name: item.productName,
+              quantity: item.quantity,
+              price: item.price,
+              attributes: item.attributes,
+            })),
+            subtotal: (session.amount_subtotal || 0) / 100,
+            shippingCost: ((session.amount_total || 0) - (session.amount_subtotal || 0)) / 100,
+            discountAmount: (session.total_details?.amount_discount || 0) / 100,
+            total: (session.amount_total || 0) / 100,
+            shippingAddress: {
+              street: shippingAddress.street || '',
+              city: shippingAddress.city || '',
+              province: shippingAddress.province || '',
+              postalCode: shippingAddress.postalCode || '',
+              country: shippingAddress.country || 'Italia',
+            },
+          }).catch(err => console.error('Failed to send order confirmation email:', err))
         }
 
         console.log('Order completed:', session.metadata?.order_number)

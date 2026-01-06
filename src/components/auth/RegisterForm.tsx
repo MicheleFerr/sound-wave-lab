@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Loader2, Mail, Lock, User } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { validatePassword, getPasswordStrengthHints } from '@/lib/validation'
@@ -16,6 +17,7 @@ export function RegisterForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [newsletter, setNewsletter] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -50,6 +52,7 @@ export function RegisterForm() {
         options: {
           data: {
             full_name: name,
+            newsletter_subscribed: newsletter,
           },
         },
       })
@@ -180,6 +183,17 @@ export function RegisterForm() {
             required
           />
         </div>
+      </div>
+
+      <div className="flex items-start space-x-2">
+        <Checkbox
+          id="newsletter"
+          checked={newsletter}
+          onCheckedChange={(checked) => setNewsletter(checked === true)}
+        />
+        <Label htmlFor="newsletter" className="text-sm leading-tight cursor-pointer">
+          Voglio ricevere novità, offerte esclusive e promozioni via email
+        </Label>
       </div>
 
       <Button
