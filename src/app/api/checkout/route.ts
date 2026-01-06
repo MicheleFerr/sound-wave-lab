@@ -166,7 +166,14 @@ export async function POST(request: NextRequest) {
       })
 
       if (orderError) {
-        console.error('Error creating order:', orderError)
+        console.error('Error creating order:', JSON.stringify(orderError, null, 2))
+        console.error('Order data attempted:', {
+          order_number: orderNumber,
+          user_id: user?.id || null,
+          has_access_token: !!accessToken,
+          coupon_id: coupon?.id || null,
+          coupon_code: coupon?.code || null,
+        })
         return null
       }
 
