@@ -1,8 +1,7 @@
 // src/app/layout.tsx
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { ThemeProvider } from '@/components/theme/ThemeProvider'
+import { ThemeProvider } from 'next-themes'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
@@ -59,23 +58,21 @@ export default function RootLayout({
   return (
     <html lang="it" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider>
-          <NextThemesProvider
-            attribute="class"
-            defaultTheme="light"
-            forcedTheme="light"
-            disableTransitionOnChange
-          >
-            <div className="relative flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </div>
-            <CartDrawer />
-            <Toaster />
-          </NextThemesProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          forcedTheme="light"
+          disableTransitionOnChange
+        >
+          <div className="relative flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <CartDrawer />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
