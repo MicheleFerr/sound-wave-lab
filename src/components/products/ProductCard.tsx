@@ -35,78 +35,80 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = highestComparePrice > lowestPrice
 
   return (
-    <Card className="group overflow-hidden offwhite-card hover:shadow-none transition-all duration-200">
+    <Card className="group overflow-hidden border-0 shadow-none hover:shadow-none transition-all duration-200 bg-transparent">
       <Link href={`/products/${product.slug}`}>
-        <div className="relative aspect-square overflow-hidden bg-white border-b border-offwhite-black">
+        <div className="relative aspect-square overflow-hidden bg-neutral-grey">
           {primaryImage ? (
             <Image
               src={primaryImage.url}
               alt={primaryImage.alt_text || product.name}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           ) : (
-            <div className="flex h-full items-center justify-center offwhite-label">
-              NO IMAGE
+            <div className="flex h-full items-center justify-center text-label-caps">
+              NESSUNA IMMAGINE
             </div>
           )}
 
-          {/* Badges - Off-White Style */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {product.is_featured && (
-              <div className="offwhite-quote bg-white px-3 py-1.5 border border-offwhite-black">
-                <span className="offwhite-label text-[10px]">FEATURED</span>
-              </div>
-            )}
-            {hasDiscount && (
-              <div className="bg-offwhite-red text-white px-3 py-1.5 border border-offwhite-black">
+          {/* Discount Badge Only */}
+          {hasDiscount && (
+            <div className="absolute top-3 left-3">
+              <div className="bg-accent-red text-white px-3 py-1.5 border border-pure-black">
                 <span className="font-bold text-xs tracking-wider">
                   -{Math.round((1 - lowestPrice / highestComparePrice) * 100)}%
                 </span>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Quick add button - Off-White Style */}
+          {/* Quick add button - Minimal Style */}
           <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:block">
-            <Button className="offwhite-button-filled w-full py-3 text-xs" size="sm">
-              ADD TO CART
+            <Button className="btn-filled w-full py-3 text-xs" size="sm">
+              AGGIUNGI AL CARRELLO
             </Button>
           </div>
         </div>
       </Link>
 
-      <CardContent className="p-4 md:p-5 space-y-3">
+      <CardContent className="p-4 md:p-5 space-y-3 bg-transparent">
         {product.category && (
           <Link
             href={`/products?category=${product.category.slug}`}
-            className="offwhite-label text-[10px] hover:underline block"
+            className="text-label-caps text-[10px] hover:underline block"
           >
             {product.category.name.toUpperCase()}
           </Link>
         )}
 
         <Link href={`/products/${product.slug}`}>
-          <h3 className="offwhite-title text-xs md:text-sm leading-tight line-clamp-2 hover:underline">
+          <h3 className="text-heading-minimal text-xs md:text-sm leading-tight line-clamp-2 hover:underline">
             {product.name}
           </h3>
         </Link>
 
         <div className="flex items-baseline gap-2 pt-1">
-          <span className="offwhite-price text-sm md:text-base">
-            EUR {lowestPrice.toFixed(2)}
+          <span className="text-price-mono text-sm md:text-base">
+            €{lowestPrice.toFixed(2)}
           </span>
           {hasDiscount && (
-            <span className="offwhite-price text-xs line-through opacity-50">
-              EUR {highestComparePrice.toFixed(2)}
+            <span className="text-price-mono text-xs line-through opacity-50">
+              €{highestComparePrice.toFixed(2)}
             </span>
           )}
         </div>
 
-        {/* Mobile add button - Off-White Style */}
-        <Button className="offwhite-button w-full mt-2 md:hidden py-3 text-xs" size="sm">
-          ADD TO CART
+        {/* Featured/Stock Status */}
+        {product.is_featured && (
+          <p className="text-label-caps text-[9px] mt-1 tracking-wide opacity-60">
+            TORNATO DISPONIBILE
+          </p>
+        )}
+
+        {/* Mobile add button - Minimal Style */}
+        <Button className="btn-outline w-full mt-2 md:hidden py-3 text-xs" size="sm">
+          AGGIUNGI AL CARRELLO
         </Button>
       </CardContent>
     </Card>

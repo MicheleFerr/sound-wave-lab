@@ -4,6 +4,7 @@ import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CartIcon } from './CartIcon'
 import { UserMenu } from './UserMenu'
+import { ThemeToggle } from './ThemeToggle'
 import { HeaderLogo, MobileLogo } from './SiteLogo'
 import { createClient } from '@/lib/supabase/server'
 
@@ -106,6 +107,7 @@ export async function Header() {
               <Search className="h-5 w-5" />
             </Link>
           </Button>
+          <ThemeToggle />
           <CartIcon />
           <UserMenu
             user={user ? {
