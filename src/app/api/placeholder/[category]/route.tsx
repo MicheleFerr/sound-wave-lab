@@ -71,16 +71,28 @@ export async function GET(
   { params }: { params: Promise<{ category: string }> }
 ) {
   const { category } = await params
+  const searchParams = request.nextUrl.searchParams
 
-  // Get category name
-  const categoryName = category
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-    .toUpperCase()
+  // Allow custom label via query param: /api/placeholder/fashion?label=VINTAGE
+  const customLabel = searchParams.get('label')
+
+  // Allow custom index via query param: /api/placeholder/fashion?index=03
+  const customIndex = searchParams.get('index')
+
+  // Option to hide text completely: /api/placeholder/fashion?minimal=true
+  const isMinimal = searchParams.get('minimal') === 'true'
+
+  // Get category name (use custom label if provided)
+  const categoryName = customLabel
+    ? customLabel.toUpperCase()
+    : category
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+        .toUpperCase()
 
   const iconPath = CATEGORY_ICONS[category] || CATEGORY_ICONS['bundles']
-  const categoryIndex = CATEGORY_INDEX[category] || '00'
+  const categoryIndex = customIndex || CATEGORY_INDEX[category] || '00'
 
   return new ImageResponse(
     (
@@ -219,60 +231,64 @@ export async function GET(
             </svg>
           </div>
 
-          {/* Category name with quotes */}
+          {/* Category name with quotes - hidden in minimal mode */}
+          {!isMinimal && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 48, fontWeight: 700 }}>&quot;</span>
+              <span
+                style={{
+                  color: 'white',
+                  fontSize: 48,
+                  fontWeight: 700,
+                  letterSpacing: '0.15em',
+                }}
+              >
+                {categoryName}
+              </span>
+              <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 48, fontWeight: 700 }}>&quot;</span>
+            </div>
+          )}
+        </div>
+
+        {/* Bottom bar with index - hidden in minimal mode */}
+        {!isMinimal && (
           <div
             style={{
               display: 'flex',
+              justifyContent: 'space-between',
               alignItems: 'center',
-              gap: 8,
+              padding: '20px 40px',
+              borderTop: '2px solid rgba(255, 255, 255, 0.2)',
             }}
           >
-            <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 48, fontWeight: 700 }}>&quot;</span>
             <span
               style={{
-                color: 'white',
-                fontSize: 48,
+                color: 'rgba(255, 255, 255, 0.5)',
+                fontSize: 14,
+                letterSpacing: '0.2em',
                 fontWeight: 700,
-                letterSpacing: '0.15em',
               }}
             >
-              {categoryName}
+              SOUND WAVE LAB
             </span>
-            <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 48, fontWeight: 700 }}>&quot;</span>
+            <span
+              style={{
+                color: '#FFFF00',
+                fontSize: 32,
+                fontWeight: 700,
+                fontFamily: 'SF Mono, Monaco, monospace',
+              }}
+            >
+              {categoryIndex}
+            </span>
           </div>
-        </div>
-
-        {/* Bottom bar with index */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '20px 40px',
-            borderTop: '2px solid rgba(255, 255, 255, 0.2)',
-          }}
-        >
-          <span
-            style={{
-              color: 'rgba(255, 255, 255, 0.5)',
-              fontSize: 14,
-              letterSpacing: '0.2em',
-              fontWeight: 700,
-            }}
-          >
-            SOUND WAVE LAB
-          </span>
-          <span
-            style={{
-              color: '#FFFF00',
-              fontSize: 32,
-              fontWeight: 700,
-              fontFamily: 'SF Mono, Monaco, monospace',
-            }}
-          >
-            {categoryIndex}
-          </span>
-        </div>
+        )}
 
         {/* Corner markers (construction/technical style) */}
         {/* Top left */}
