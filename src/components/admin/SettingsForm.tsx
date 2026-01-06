@@ -160,7 +160,7 @@ function extractValue(setting: Setting): Record<string, string | boolean> {
 }
 
 // Reconstruct setting value from form fields
-function reconstructValue(setting: Setting, formValues: Record<string, string>): unknown {
+function reconstructValue(setting: Setting, formValues: Record<string, string | boolean>): unknown {
   // CTA buttons - reconstruct with fixed link
   if (setting.key === 'hero_cta_primary') {
     return { text: formValues['hero_cta_primary'], link: '/products' }
@@ -210,12 +210,13 @@ function reconstructValue(setting: Setting, formValues: Record<string, string>):
 
   // Boolean values (checkboxes)
   if (setting.key === 'header_dark_mode_enabled') {
-    return formValues[setting.key] === 'true' || formValues[setting.key] === true
+    const val = formValues[setting.key]
+    return val === true || val === 'true'
   }
 
   // Numbers
   if (setting.key === 'store_free_shipping_threshold' || setting.key === 'store_shipping_cost') {
-    return parseFloat(formValues[setting.key]) || 0
+    return parseFloat(String(formValues[setting.key])) || 0
   }
 
   // Simple string values
