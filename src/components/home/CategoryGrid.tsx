@@ -37,11 +37,10 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
   return (
     <div className="w-full overflow-hidden">
       {/* Desktop Layout: Asymmetric 1+3 grid */}
-      {/* 1 large card on left (spans 3 rows), 3 smaller cards stacked on right */}
-      <div className="hidden md:grid md:grid-cols-2 gap-4" style={{ gridTemplateRows: 'repeat(3, 1fr)' }}>
-        {/* Large featured card - spans all 3 rows */}
+      <div className="hidden md:flex gap-4">
+        {/* Large featured card - left side */}
         {categories[0] && (
-          <div className="row-span-3">
+          <div className="w-1/2">
             <CategoryCard
               category={categories[0]}
               index={0}
@@ -51,13 +50,15 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
         )}
 
         {/* 3 smaller cards stacked on the right */}
-        {categories.slice(1, 4).map((category, idx) => (
-          <CategoryCard
-            key={category.id}
-            category={category}
-            index={idx + 1}
-          />
-        ))}
+        <div className="w-1/2 flex flex-col gap-4">
+          {categories.slice(1, 4).map((category, idx) => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              index={idx + 1}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Mobile Layout: 1 large card on top + 3 small below */}

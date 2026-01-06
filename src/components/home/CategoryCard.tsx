@@ -27,7 +27,7 @@ export function CategoryCard({ category, index, isFeatured = false }: CategoryCa
         group relative overflow-hidden
         border-2 border-pure-black
         bg-white
-        ${isFeatured ? 'aspect-[2/3] md:aspect-auto md:h-full' : 'aspect-square'}
+        ${isFeatured ? 'aspect-[3/4]' : 'aspect-[4/3]'}
         transition-all duration-300
       `}
     >
