@@ -1,11 +1,9 @@
 // src/components/layout/Header.tsx
 import Link from 'next/link'
-import { Search } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { CartIcon } from './CartIcon'
 import { UserMenu } from './UserMenu'
-import { ThemeToggle } from './ThemeToggle'
 import { HeaderLogo, MobileLogo } from './SiteLogo'
+import { SearchBar } from './SearchBar'
 import { createClient } from '@/lib/supabase/server'
 
 interface NavLink {
@@ -23,7 +21,6 @@ async function getHeaderSettings() {
 
   const navLinks: NavLink[] = []
   let announcement = ''
-  let darkModeEnabled = true // Default to true if setting doesn't exist
 
   settings?.forEach(setting => {
     if (setting.key === 'header_nav_links' && Array.isArray(setting.value)) {
@@ -31,9 +28,6 @@ async function getHeaderSettings() {
     }
     if (setting.key === 'header_announcement' && typeof setting.value === 'string') {
       announcement = setting.value
-    }
-    if (setting.key === 'header_dark_mode_enabled') {
-      darkModeEnabled = Boolean(setting.value)
     }
   })
 
@@ -46,7 +40,7 @@ async function getHeaderSettings() {
     )
   }
 
-  return { navLinks, announcement, darkModeEnabled }
+  return { navLinks, announcement }
 }
 
 export async function Header() {
@@ -66,7 +60,7 @@ export async function Header() {
     profile = data
   }
 
-  const { navLinks, announcement, darkModeEnabled } = headerSettings
+  const { navLinks, announcement } = headerSettings
 
   return (
     <>
@@ -77,7 +71,7 @@ export async function Header() {
         </div>
       )}
 
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b bg-background relative">
         <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
           {/* Logo */}
           <div className="flex items-center">
@@ -97,7 +91,7 @@ export async function Header() {
               <Link
                 key={index}
                 href={link.url}
-                className="text-sm font-medium hover:text-primary transition-colors"
+                className="text-xs font-bold uppercase tracking-wider hover:opacity-70 transition-opacity"
               >
                 {link.text}
               </Link>
@@ -106,12 +100,7 @@ export async function Header() {
 
         {/* Actions */}
         <div className="flex items-center space-x-1 md:space-x-2">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/search" aria-label="Cerca">
-              <Search className="h-5 w-5" />
-            </Link>
-          </Button>
-          {darkModeEnabled && <ThemeToggle />}
+          <SearchBar />
           <CartIcon />
           <UserMenu
             user={user ? {
