@@ -70,19 +70,64 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Calculate totals
+    // Get current user if logged in
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // SECURITY: Validate prices server-side against database
+    const variantIds = items.map(item => item.variantId)
+    const { data: variants, error: variantError } = await supabase
+      .from('product_variants')
+      .select('id, price, stock_quantity, is_active')
+      .in('id', variantIds)
+
+    if (variantError || !variants || variants.length !== items.length) {
+      return NextResponse.json(
+        { error: 'Alcuni prodotti non sono più disponibili' },
+        { status: 400 }
+      )
+    }
+
+    // Create price map from database
+    const priceMap = new Map(
+      variants.map(v => [v.id, { price: Number(v.price), stock: v.stock_quantity, active: v.is_active }])
+    )
+
+    // Validate all items are available
+    for (const item of items) {
+      const dbVariant = priceMap.get(item.variantId)
+      if (!dbVariant) {
+        return NextResponse.json(
+          { error: `Prodotto non trovato: ${item.productName}` },
+          { status: 400 }
+        )
+      }
+      if (!dbVariant.active) {
+        return NextResponse.json(
+          { error: `Prodotto non disponibile: ${item.productName}` },
+          { status: 400 }
+        )
+      }
+      if (dbVariant.stock !== null && dbVariant.stock < item.quantity) {
+        return NextResponse.json(
+          { error: `Quantità insufficiente per: ${item.productName}` },
+          { status: 400 }
+        )
+      }
+    }
+
+    // Calculate totals using SERVER-SIDE prices (not client-provided)
     const subtotalCents = items.reduce(
-      (sum, item) => sum + Math.round(item.price * 100) * item.quantity,
+      (sum, item) => {
+        const serverPrice = priceMap.get(item.variantId)!.price
+        return sum + Math.round(serverPrice * 100) * item.quantity
+      },
       0
     )
     const shippingCost = subtotalCents >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST
     const discountCents = coupon ? Math.round(coupon.discount_amount * 100) : 0
     const totalCents = Math.max(0, subtotalCents + shippingCost - discountCents)
     const isFreeOrder = totalCents === 0
-
-    // Get current user if logged in
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
 
     // Generate order number
     const orderNumber = generateOrderNumber()
@@ -120,17 +165,20 @@ export async function POST(request: NextRequest) {
         .single()
 
       if (orderData) {
-        // Create order items
-        const orderItems = items.map((item) => ({
-          order_id: orderData.id,
-          variant_id: item.variantId,
-          product_name: item.productName,
-          variant_sku: item.variantSku,
-          variant_attributes: item.attributes,
-          unit_price: item.price,
-          quantity: item.quantity,
-          total_price: item.price * item.quantity,
-        }))
+        // Create order items with SERVER-SIDE prices
+        const orderItems = items.map((item) => {
+          const serverPrice = priceMap.get(item.variantId)!.price
+          return {
+            order_id: orderData.id,
+            variant_id: item.variantId,
+            product_name: item.productName,
+            variant_sku: item.variantSku,
+            variant_attributes: item.attributes,
+            unit_price: serverPrice,
+            quantity: item.quantity,
+            total_price: serverPrice * item.quantity,
+          }
+        })
 
         await supabaseAdmin.from('order_items').insert(orderItems)
       }
@@ -178,25 +226,29 @@ export async function POST(request: NextRequest) {
     // For PAID orders, create Stripe Checkout Session
     const stripe = await getStripe()
 
-    const lineItems: any[] = items.map((item) => ({
-      price_data: {
-        currency: 'eur',
-        product_data: {
-          name: item.productName,
-          description: Object.entries(item.attributes)
-            .map(([k, v]) => `${k}: ${v}`)
-            .join(', ') || undefined,
-          images: item.imageUrl ? [item.imageUrl] : undefined,
-          metadata: {
-            variant_id: item.variantId,
-            product_id: item.productId,
-            sku: item.variantSku,
+    const lineItems: any[] = items.map((item) => {
+      // Use server-side price from database, not client-provided
+      const serverPrice = priceMap.get(item.variantId)!.price
+      return {
+        price_data: {
+          currency: 'eur',
+          product_data: {
+            name: item.productName,
+            description: Object.entries(item.attributes)
+              .map(([k, v]) => `${k}: ${v}`)
+              .join(', ') || undefined,
+            images: item.imageUrl ? [item.imageUrl] : undefined,
+            metadata: {
+              variant_id: item.variantId,
+              product_id: item.productId,
+              sku: item.variantSku,
+            },
           },
+          unit_amount: Math.round(serverPrice * 100),
         },
-        unit_amount: Math.round(item.price * 100),
-      },
-      quantity: item.quantity,
-    }))
+        quantity: item.quantity,
+      }
+    })
 
     // Add shipping as a line item if not free
     if (shippingCost > 0) {
@@ -230,7 +282,7 @@ export async function POST(request: NextRequest) {
           productName: item.productName,
           variantSku: item.variantSku,
           attributes: item.attributes,
-          price: item.price,
+          price: priceMap.get(item.variantId)!.price, // Use server-side price
           quantity: item.quantity,
         }))),
       },
