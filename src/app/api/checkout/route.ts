@@ -224,9 +224,10 @@ export async function POST(request: NextRequest) {
       }
 
       // Redirect directly to success page with order number (and token for guests)
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL?.trim() || ''
       const successUrl = accessToken
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?order=${orderNumber}&token=${accessToken}`
-        : `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?order=${orderNumber}`
+        ? `${appUrl}/checkout/success?order=${orderNumber}&token=${accessToken}`
+        : `${appUrl}/checkout/success?order=${orderNumber}`
 
       return NextResponse.json({
         sessionId: null,
