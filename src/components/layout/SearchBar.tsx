@@ -46,19 +46,20 @@ export function SearchBar() {
         </Button>
       )}
 
-      {/* Search Bar Overlay - Full Width like Off-White */}
+      {/* Search Bar - Integrated with Header */}
       <div
         className={`
-          fixed inset-x-0 top-[57px] md:top-[65px] z-50
-          transition-all duration-300 ease-out
+          fixed inset-x-0 top-[56px] md:top-[64px] z-40
+          origin-top
+          transition-all duration-200 ease-out
           ${isOpen
-            ? 'opacity-100 translate-y-0'
-            : 'opacity-0 -translate-y-1 pointer-events-none'
+            ? 'opacity-100 scale-y-100'
+            : 'opacity-0 scale-y-0 pointer-events-none'
           }
         `}
         style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}
       >
-        <div className="bg-background w-screen">
+        <div className="bg-background w-screen border-b">
           <form onSubmit={handleSubmit}>
             <div className="flex items-center h-12 px-4 gap-3">
               <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
@@ -79,8 +80,6 @@ export function SearchBar() {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            {/* Bottom line - full width */}
-            <div className="h-px bg-foreground/20 w-full" />
           </form>
         </div>
       </div>
