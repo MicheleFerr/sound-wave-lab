@@ -27,20 +27,10 @@ export function CategoryCard({ category, index, isFeatured = false }: CategoryCa
         group relative overflow-hidden
         border-2 border-pure-black
         bg-white
-        ${isFeatured ? 'aspect-[4/5]' : 'aspect-square'}
+        ${isFeatured ? 'aspect-[2/3] md:aspect-auto md:h-full' : 'aspect-square'}
         transition-all duration-300
       `}
     >
-      {/* Yellow diagonal stripes - top right corner */}
-      <div className="absolute top-0 right-0 w-20 h-20 overflow-hidden z-20 pointer-events-none">
-        <div
-          className="absolute -top-10 -right-10 w-32 h-32"
-          style={{
-            background: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #FFFF00 4px, #FFFF00 8px)',
-          }}
-        />
-      </div>
-
       {/* Image container with shift effect on hover */}
       <div className="absolute inset-0 transition-transform duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1">
         {category.image_url ? (
