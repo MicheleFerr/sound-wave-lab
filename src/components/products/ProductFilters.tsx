@@ -31,11 +31,11 @@ interface ProductFiltersProps {
 }
 
 const sortOptions = [
-  { value: 'featured', label: 'In evidenza' },
-  { value: 'newest', label: 'Più recenti' },
-  { value: 'name', label: 'Nome A-Z' },
-  { value: 'price-asc', label: 'Prezzo crescente' },
-  { value: 'price-desc', label: 'Prezzo decrescente' },
+  { value: 'featured', label: 'IN EVIDENZA' },
+  { value: 'newest', label: 'PIÙ RECENTI' },
+  { value: 'name', label: 'NOME A-Z' },
+  { value: 'price-asc', label: 'PREZZO CRESCENTE' },
+  { value: 'price-desc', label: 'PREZZO DECRESCENTE' },
 ]
 
 export function ProductFilters({
@@ -88,15 +88,15 @@ export function ProductFilters({
     <div className="space-y-6">
       {/* Categories */}
       <div>
-        <h3 className="font-semibold mb-3">Categorie</h3>
+        <h3 className="text-label-caps text-[10px] tracking-wider mb-3">CATEGORIE</h3>
         <div className="flex flex-wrap gap-2">
           <Button
             variant={!currentCategory ? 'default' : 'outline'}
             size="sm"
             onClick={() => handleCategoryChange('all')}
-            className={!currentCategory ? 'bg-brand-gradient border-0' : ''}
+            className={`text-xs font-bold uppercase tracking-wider ${!currentCategory ? 'bg-brand-gradient border-0' : ''}`}
           >
-            Tutte
+            TUTTE
           </Button>
           {categories.map((cat) => (
             <Button
@@ -104,9 +104,9 @@ export function ProductFilters({
               variant={currentCategory === cat.slug ? 'default' : 'outline'}
               size="sm"
               onClick={() => handleCategoryChange(cat.slug)}
-              className={currentCategory === cat.slug ? 'bg-brand-gradient border-0' : ''}
+              className={`text-xs font-bold uppercase tracking-wider ${currentCategory === cat.slug ? 'bg-brand-gradient border-0' : ''}`}
             >
-              {cat.name}
+              {cat.name.toUpperCase()}
             </Button>
           ))}
         </div>
@@ -123,10 +123,10 @@ export function ProductFilters({
           <form onSubmit={handleSearch} className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Cerca prodotti..."
+              placeholder="CERCA PRODOTTI..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="pl-10"
+              className="pl-10 text-xs tracking-wide uppercase"
             />
           </form>
 
@@ -136,9 +136,9 @@ export function ProductFilters({
               variant={!currentCategory ? 'default' : 'outline'}
               size="sm"
               onClick={() => handleCategoryChange('all')}
-              className={!currentCategory ? 'bg-brand-gradient border-0' : ''}
+              className={`text-xs font-bold uppercase tracking-wider ${!currentCategory ? 'bg-brand-gradient border-0' : ''}`}
             >
-              Tutte
+              TUTTE
             </Button>
             {categories.map((cat) => (
               <Button
@@ -146,9 +146,9 @@ export function ProductFilters({
                 variant={currentCategory === cat.slug ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => handleCategoryChange(cat.slug)}
-                className={currentCategory === cat.slug ? 'bg-brand-gradient border-0' : ''}
+                className={`text-xs font-bold uppercase tracking-wider ${currentCategory === cat.slug ? 'bg-brand-gradient border-0' : ''}`}
               >
-                {cat.name}
+                {cat.name.toUpperCase()}
               </Button>
             ))}
           </div>
@@ -176,10 +176,10 @@ export function ProductFilters({
           <form onSubmit={handleSearch} className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Cerca..."
+              placeholder="CERCA..."
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="pl-10"
+              className="pl-10 text-xs tracking-wide uppercase"
             />
           </form>
 
@@ -192,7 +192,7 @@ export function ProductFilters({
             </SheetTrigger>
             <SheetContent side="right">
               <SheetHeader>
-                <SheetTitle>Filtri</SheetTitle>
+                <SheetTitle className="text-heading-minimal text-base tracking-wider">FILTRI</SheetTitle>
               </SheetHeader>
               <div className="mt-6">
                 <FiltersContent />
@@ -246,15 +246,15 @@ export function ProductFilters({
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
-                className="text-muted-foreground"
+                className="text-xs font-bold uppercase tracking-wider opacity-70"
               >
-                Cancella filtri
+                CANCELLA FILTRI
               </Button>
             </>
           )}
         </div>
-        <p className="text-sm text-muted-foreground">
-          {productCount} {productCount === 1 ? 'prodotto' : 'prodotti'}
+        <p className="text-xs tracking-wide opacity-70 uppercase">
+          {productCount} {productCount === 1 ? 'PRODOTTO' : 'PRODOTTI'}
         </p>
       </div>
     </div>

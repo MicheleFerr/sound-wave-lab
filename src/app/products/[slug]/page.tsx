@@ -108,7 +108,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const sortedImages = [...product.images].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-6 md:py-10">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
@@ -143,33 +143,30 @@ export default async function ProductPage({ params }: ProductPageProps) {
             {/* Category Badge */}
             {product.category && (
               <Link href={`/products?category=${product.category.slug}`}>
-                <Badge
-                  variant="outline"
-                  className="bg-brand-gradient-light border-brand-teal/30 text-brand-teal dark:text-brand-teal-light"
-                >
-                  {product.category.name}
-                </Badge>
+                <span className="text-label-caps text-[10px] hover:underline">
+                  {product.category.name.toUpperCase()}
+                </span>
               </Link>
             )}
 
             {/* Title */}
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">
-              {product.name}
+            <h1 className="text-heading-minimal text-xl md:text-2xl lg:text-3xl">
+              {product.name.toUpperCase()}
             </h1>
 
             {/* Price */}
-            <div className="flex items-center gap-4">
-              <span className="text-3xl font-bold text-brand-gradient">
+            <div className="flex items-baseline gap-3">
+              <span className="text-price-mono text-2xl md:text-3xl">
                 €{lowestPrice.toFixed(2)}
               </span>
               {hasDiscount && (
                 <>
-                  <span className="text-xl text-muted-foreground line-through">
+                  <span className="text-price-mono text-lg text-muted-foreground line-through">
                     €{highestComparePrice.toFixed(2)}
                   </span>
-                  <Badge variant="destructive" className="text-sm">
+                  <span className="bg-accent-red text-white px-2 py-1 text-xs font-bold">
                     -{discountPercentage}%
-                  </Badge>
+                  </span>
                 </>
               )}
             </div>
@@ -190,25 +187,25 @@ export default async function ProductPage({ params }: ProductPageProps) {
             />
 
             {/* Trust Badges */}
-            <div className="border-t pt-6 mt-6">
+            <div className="border-t border-pure-black/10 pt-6 mt-6">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div className="space-y-2">
-                  <div className="w-10 h-10 mx-auto rounded-full bg-brand-gradient-light flex items-center justify-center">
-                    <Truck className="h-5 w-5 text-brand-teal" />
+                  <div className="w-10 h-10 mx-auto rounded-full bg-neutral-grey flex items-center justify-center">
+                    <Truck className="h-5 w-5 text-pure-black" />
                   </div>
-                  <p className="text-xs text-muted-foreground">Spedizione Gratuita oltre €50</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Spedizione Gratuita oltre €50</p>
                 </div>
                 <div className="space-y-2">
-                  <div className="w-10 h-10 mx-auto rounded-full bg-brand-gradient-light flex items-center justify-center">
-                    <RefreshCcw className="h-5 w-5 text-brand-teal" />
+                  <div className="w-10 h-10 mx-auto rounded-full bg-neutral-grey flex items-center justify-center">
+                    <RefreshCcw className="h-5 w-5 text-pure-black" />
                   </div>
-                  <p className="text-xs text-muted-foreground">Reso Gratuito 30 giorni</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Reso Gratuito 30 giorni</p>
                 </div>
                 <div className="space-y-2">
-                  <div className="w-10 h-10 mx-auto rounded-full bg-brand-gradient-light flex items-center justify-center">
-                    <Shield className="h-5 w-5 text-brand-teal" />
+                  <div className="w-10 h-10 mx-auto rounded-full bg-neutral-grey flex items-center justify-center">
+                    <Shield className="h-5 w-5 text-pure-black" />
                   </div>
-                  <p className="text-xs text-muted-foreground">Pagamento Sicuro</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Pagamento Sicuro</p>
                 </div>
               </div>
             </div>
@@ -218,10 +215,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <section className="mt-16 md:mt-24">
-            <h2 className="text-2xl font-bold mb-8">
-              <span className="text-brand-gradient">
-                Prodotti Correlati
-              </span>
+            <h2 className="text-heading-minimal text-lg md:text-xl mb-8">
+              PRODOTTI CORRELATI
             </h2>
             <ProductGrid products={relatedProducts} columns={4} />
           </section>

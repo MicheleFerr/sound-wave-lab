@@ -82,41 +82,41 @@ function CheckoutSuccessContent() {
   }, [sessionId, orderNumber])
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-lg mx-auto text-center">
           {/* Success Icon */}
-          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-            <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
+          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
+            <CheckCircle className="w-12 h-12 text-green-600" />
           </div>
 
-          <h1 className="text-3xl font-bold mb-4">
-            Grazie per il tuo ordine!
+          <h1 className="text-heading-minimal text-xl md:text-2xl mb-4">
+            GRAZIE PER IL TUO ORDINE!
           </h1>
 
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-brand-teal" />
+              <Loader2 className="h-6 w-6 animate-spin text-pure-black" />
             </div>
           ) : orderDetails ? (
             <div className="space-y-4 mb-8">
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Il tuo ordine è stato completato con successo.
               </p>
 
-              <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 text-left">
+              <div className="bg-neutral-grey border border-pure-black/10 p-6 text-left">
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Numero ordine:</span>
-                    <span className="font-mono font-semibold">{orderDetails.orderNumber}</span>
+                    <span className="text-muted-foreground text-sm">Numero ordine:</span>
+                    <span className="text-price-mono font-semibold">{orderDetails.orderNumber}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Email:</span>
-                    <span>{orderDetails.email}</span>
+                    <span className="text-muted-foreground text-sm">Email:</span>
+                    <span className="text-sm">{orderDetails.email}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Totale:</span>
-                    <span className="font-bold text-brand-teal">
+                    <span className="text-muted-foreground text-sm">Totale:</span>
+                    <span className="text-price-mono font-bold">
                       {orderDetails.total === 0 ? 'Gratuito' : `€${orderDetails.total.toFixed(2)}`}
                     </span>
                   </div>
@@ -129,28 +129,28 @@ function CheckoutSuccessContent() {
               </p>
             </div>
           ) : (
-            <p className="text-muted-foreground mb-8">
+            <p className="text-muted-foreground mb-8 text-sm">
               Il tuo ordine è stato completato con successo. Riceverai presto una email di conferma.
             </p>
           )}
 
           {/* Next Steps */}
-          <div className="bg-brand-gradient-light rounded-lg border border-brand-teal/30 p-6 mb-8">
+          <div className="bg-neutral-grey border border-pure-black/10 p-6 mb-8">
             <div className="flex items-center gap-3 mb-3">
-              <Package className="h-6 w-6 text-brand-teal" />
-              <h3 className="font-semibold">Prossimi passi</h3>
+              <Package className="h-6 w-6 text-pure-black" />
+              <h3 className="text-label-caps text-[10px]">PROSSIMI PASSI</h3>
             </div>
             <ul className="text-sm text-left space-y-2 text-muted-foreground">
               <li className="flex items-start gap-2">
-                <span className="text-brand-teal font-bold">1.</span>
+                <span className="text-pure-black font-bold">1.</span>
                 Riceverai un&apos;email di conferma con i dettagli dell&apos;ordine
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-brand-teal font-bold">2.</span>
+                <span className="text-pure-black font-bold">2.</span>
                 Prepareremo il tuo pacco con cura
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-brand-teal font-bold">3.</span>
+                <span className="text-pure-black font-bold">3.</span>
                 Ti invieremo il tracking quando spediremo
               </li>
             </ul>
@@ -158,15 +158,15 @@ function CheckoutSuccessContent() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-brand-gradient hover:opacity-90 !text-white">
+            <Button asChild className="btn-filled">
               <Link href="/products">
-                Continua lo shopping
+                CONTINUA LO SHOPPING
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button variant="outline" asChild>
+            <Button variant="outline" asChild className="btn-outline text-xs">
               <Link href="/account/ordini">
-                I miei ordini
+                I MIEI ORDINI
               </Link>
             </Button>
           </div>
@@ -179,8 +179,8 @@ function CheckoutSuccessContent() {
 export default function CheckoutSuccessPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-white dark:bg-zinc-950 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-teal" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-pure-black" />
       </div>
     }>
       <CheckoutSuccessContent />

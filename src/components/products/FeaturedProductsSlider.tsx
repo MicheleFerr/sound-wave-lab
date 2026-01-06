@@ -81,9 +81,9 @@ export function FeaturedProductsSlider({ products }: FeaturedProductsSliderProps
 
       {/* Progress Bar */}
       <div className="w-full max-w-md mx-auto">
-        <div className="h-[1px] bg-pure-black/20 dark:bg-white/20 relative">
+        <div className="h-[1px] bg-pure-black/20 relative">
           <div
-            className="h-full bg-pure-black dark:bg-white transition-all duration-300"
+            className="h-full bg-pure-black transition-all duration-300"
             style={{ width: `${((current + 1) / count) * 100}%` }}
           />
         </div>

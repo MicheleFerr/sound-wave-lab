@@ -6,8 +6,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Helvetica Neue", "Helvetica", "Arial", system-ui, sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Courier New", monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -121,6 +121,21 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "Helvetica Neue", "Helvetica", "Arial", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: 0.02em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+
+  button, a {
+    letter-spacing: 0.05em;
+    font-weight: 600;
   }
 }
 
@@ -237,20 +252,22 @@
   }
 }
 
-/* Minimal Typography & Style System */
+/* Minimal Typography & Style System - Off-White Inspired */
 .text-heading-minimal {
   text-transform: uppercase;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: #000000;
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 .text-label-caps {
   text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-size: 0.7rem;
   color: #000000;
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 .text-quoted {
@@ -294,10 +311,11 @@
   color: #000000;
   text-transform: uppercase;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   padding: 0.75rem 2rem;
   border-radius: 2px;
   transition: all 0.2s;
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 .btn-outline:hover {
@@ -311,10 +329,11 @@
   color: #FFFFFF;
   text-transform: uppercase;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   padding: 0.75rem 2rem;
   border-radius: 2px;
   transition: all 0.2s;
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
 .btn-filled:hover {
@@ -323,8 +342,8 @@
 }
 
 .text-price-mono {
-  font-family: ui-monospace, monospace;
-  font-weight: 600;
+  font-family: "SF Mono", "Monaco", "Courier New", ui-monospace, monospace;
+  font-weight: 700;
   letter-spacing: 0.05em;
 }
 

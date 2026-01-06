@@ -55,65 +55,41 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white">
-        <div className="container mx-auto px-4 py-16 md:py-24 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div className="space-y-6 text-center lg:text-left">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                Indossa la tua
-                <span className="block text-brand-gradient">passione</span>
-              </h1>
-              <p className="text-lg md:text-xl text-zinc-300 max-w-lg mx-auto lg:mx-0">
-                Magliette uniche con design originali.
-                Qualità premium, spedizione gratuita.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button size="lg" asChild className="text-base font-semibold bg-brand-gradient hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] border-0 !text-white shadow-lg rounded-lg px-6 transition-all duration-200">
-                  <Link href="/products">
-                    Esplora il catalogo
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="secondary" asChild className="text-base font-medium bg-white/10 backdrop-blur-sm text-white border border-white/30 hover:bg-white/20 hover:scale-[1.01] active:scale-[0.99] rounded-lg px-6 transition-all duration-200">
-                  <Link href="/products">
-                    Novità
-                  </Link>
-                </Button>
-              </div>
-            </div>
-
-            {/* Hero Image/Visual */}
-            <div className="hidden lg:flex justify-center">
-              <div className="relative w-96 h-96">
-                <div className="absolute inset-0 bg-brand-gradient-strong rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute inset-8 bg-brand-gradient-medium rounded-full blur-2xl"></div>
-                <div className="relative flex items-center justify-center h-full">
-                  <div className="relative">
-                    <Music className="w-32 h-32 text-white/90" />
-                    <Headphones className="absolute -top-4 -right-8 w-16 h-16 text-brand-teal-light" />
-                    <Radio className="absolute -bottom-4 -left-8 w-16 h-16 text-brand-gold" />
-                  </div>
-                </div>
-              </div>
+      {/* Hero Section - Minimal Style */}
+      <section className="relative bg-pure-black text-white">
+        <div className="container mx-auto px-4 py-20 md:py-28 lg:py-36">
+          <div className="max-w-2xl">
+            <h1 className="text-heading-minimal text-3xl md:text-4xl lg:text-5xl tracking-wider !text-white">
+              INDOSSA LA TUA
+              <span className="block text-accent-yellow mt-2">PASSIONE</span>
+            </h1>
+            <p className="text-sm md:text-base text-white/70 mt-6 max-w-md tracking-wide">
+              Magliette uniche con design originali.
+              Qualità premium, spedizione gratuita.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 mt-8">
+              <Button size="lg" asChild className="btn-filled !bg-white !text-black hover:!bg-white/90 text-xs tracking-wider">
+                <Link href="/products">
+                  ESPLORA IL CATALOGO
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="btn-outline !border-white !text-white hover:!bg-white hover:!text-black text-xs tracking-wider">
+                <Link href="/products?sort=newest">
+                  NOVITÀ
+                </Link>
+              </Button>
             </div>
           </div>
-        </div>
-
-        {/* Wave decoration */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 50L48 45.7C96 41 192 33 288 35.2C384 37 480 50 576 54.8C672 60 768 57 864 50C960 43 1056 33 1152 31.5C1248 30 1344 37 1392 40.5L1440 44V100H1392C1344 100 1248 100 1152 100C1056 100 960 100 864 100C768 100 672 100 576 100C480 100 384 100 288 100C192 100 96 100 48 100H0V50Z" fill="white" className="dark:fill-zinc-950"/>
-          </svg>
         </div>
       </section>
 
       {/* Categories Section */}
-      <section className="py-12 md:py-16 bg-white dark:bg-zinc-950">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold">Esplora per categoria</h2>
-            <p className="text-muted-foreground mt-2">Trova il design perfetto per te</p>
+            <h2 className="text-heading-minimal text-xl md:text-2xl tracking-wider">ESPLORA PER CATEGORIA</h2>
+            <p className="text-label-caps text-[10px] mt-3 opacity-60">TROVA IL DESIGN PERFETTO PER TE</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -121,7 +97,7 @@ export default async function Home() {
               <Link
                 key={category.id}
                 href={`/products?category=${category.slug}`}
-                className="group relative aspect-square rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800"
+                className="group relative aspect-square rounded-xl overflow-hidden bg-neutral-grey"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10"></div>
                 {category.image_url ? (
@@ -141,8 +117,8 @@ export default async function Home() {
                   </div>
                 )}
                 <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                  <h3 className="text-white font-semibold text-lg">{category.name}</h3>
-                  <p className="text-white/70 text-sm mt-1 line-clamp-1">{category.description}</p>
+                  <h3 className="text-white text-heading-minimal text-sm tracking-wider !text-white">{category.name.toUpperCase()}</h3>
+                  <p className="text-white/70 text-xs mt-1 line-clamp-1 tracking-wide">{category.description}</p>
                 </div>
               </Link>
             ))}
@@ -151,7 +127,7 @@ export default async function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-12 md:py-16 bg-white dark:bg-zinc-900">
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8 md:mb-12">
             <div>
@@ -180,40 +156,40 @@ export default async function Home() {
       </section>
 
       {/* Features/Trust Section */}
-      <section className="py-12 md:py-16 bg-white dark:bg-zinc-950">
+      <section className="py-12 md:py-16 bg-neutral-grey">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-brand-gradient-light flex items-center justify-center">
-                <svg className="w-6 h-6 text-brand-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 mx-auto border-2 border-pure-black flex items-center justify-center">
+                <svg className="w-6 h-6 text-pure-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-lg">Qualità Premium</h3>
-              <p className="text-muted-foreground text-sm">
-                100% cotone organico, stampa di alta qualità che dura nel tempo
+              <h3 className="text-heading-minimal text-sm tracking-wider">QUALITÀ PREMIUM</h3>
+              <p className="text-xs tracking-wide opacity-70">
+                100% COTONE ORGANICO, STAMPA DI ALTA QUALITÀ CHE DURA NEL TEMPO
               </p>
             </div>
             <div className="space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-brand-gradient-light flex items-center justify-center">
-                <svg className="w-6 h-6 text-brand-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 mx-auto border-2 border-pure-black flex items-center justify-center">
+                <svg className="w-6 h-6 text-pure-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-lg">Spedizione Gratuita</h3>
-              <p className="text-muted-foreground text-sm">
-                Spedizione gratuita per ordini superiori a €50 in tutta Italia
+              <h3 className="text-heading-minimal text-sm tracking-wider">SPEDIZIONE GRATUITA</h3>
+              <p className="text-xs tracking-wide opacity-70">
+                SPEDIZIONE GRATUITA PER ORDINI SUPERIORI A €50 IN TUTTA ITALIA
               </p>
             </div>
             <div className="space-y-3">
-              <div className="w-12 h-12 mx-auto rounded-full bg-brand-gradient-light flex items-center justify-center">
-                <svg className="w-6 h-6 text-brand-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-12 h-12 mx-auto border-2 border-pure-black flex items-center justify-center">
+                <svg className="w-6 h-6 text-pure-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-lg">Reso Facile</h3>
-              <p className="text-muted-foreground text-sm">
-                30 giorni per cambiare idea con reso gratuito
+              <h3 className="text-heading-minimal text-sm tracking-wider">RESO FACILE</h3>
+              <p className="text-xs tracking-wide opacity-70">
+                30 GIORNI PER CAMBIARE IDEA CON RESO GRATUITO
               </p>
             </div>
           </div>

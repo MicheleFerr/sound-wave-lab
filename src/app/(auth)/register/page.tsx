@@ -10,19 +10,17 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-pure-black px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl p-8">
+        <div className="bg-white border border-pure-black/10 p-8">
           {/* Logo */}
           <div className="text-center mb-8">
             <Link href="/" className="inline-block">
-              <h1 className="text-2xl font-bold">
-                <span className="text-brand-gradient">
-                  Sound Wave Lab
-                </span>
+              <h1 className="text-heading-minimal text-xl">
+                SOUND WAVE LAB
               </h1>
             </Link>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-2 text-sm">
               Crea il tuo account
             </p>
           </div>
@@ -35,7 +33,7 @@ export default function RegisterPage() {
             <span className="text-muted-foreground">Hai già un account? </span>
             <Link
               href="/login"
-              className="text-brand-teal hover:text-brand-teal font-medium"
+              className="text-pure-black hover:underline font-medium"
             >
               Accedi
             </Link>
@@ -46,7 +44,7 @@ export default function RegisterPage() {
         <div className="mt-6 text-center">
           <Link
             href="/"
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            className="text-sm text-white/70 hover:text-white transition-colors"
           >
             ← Torna al sito
           </Link>

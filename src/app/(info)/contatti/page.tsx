@@ -26,16 +26,14 @@ export default async function ContattiPage() {
   const address = (settings.contact_address as string) || 'Via della Musica 42, 20121 Milano, Italia'
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white py-16 md:py-24">
+      <section className="bg-pure-black text-white py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            <span className="text-brand-gradient">
-              {pageContent?.title || 'Contatti'}
-            </span>
+          <h1 className="text-heading-minimal text-2xl md:text-3xl lg:text-4xl !text-white mb-4">
+            {(pageContent?.title || 'Contatti').toUpperCase()}
           </h1>
-          <p className="text-zinc-300 max-w-2xl mx-auto text-lg">
+          <p className="text-white/70 max-w-2xl mx-auto text-sm tracking-wide">
             {pageContent?.content || 'Hai domande? Contattaci! Siamo sempre disponibili per aiutarti.'}
           </p>
         </div>
@@ -47,66 +45,62 @@ export default async function ContattiPage() {
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Contact Info */}
             <div className="space-y-8">
-              <h2 className="text-2xl font-bold">
-                <span className="text-brand-gradient">
-                  Come contattarci
-                </span>
+              <h2 className="text-heading-minimal text-lg">
+                COME CONTATTARCI
               </h2>
 
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-brand-gradient-medium flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-5 h-5 text-brand-teal" />
+                  <div className="w-12 h-12 rounded-full bg-neutral-grey flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-5 h-5 text-pure-black" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Email</h3>
-                    <a href={`mailto:${email}`} className="text-muted-foreground hover:text-brand-teal transition-colors">
+                    <h3 className="text-label-caps text-[10px]">EMAIL</h3>
+                    <a href={`mailto:${email}`} className="text-muted-foreground hover:text-pure-black transition-colors text-sm">
                       {email}
                     </a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-brand-gradient-medium flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-5 h-5 text-brand-teal" />
+                  <div className="w-12 h-12 rounded-full bg-neutral-grey flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-5 h-5 text-pure-black" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Telefono</h3>
-                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="text-muted-foreground hover:text-brand-teal transition-colors">
+                    <h3 className="text-label-caps text-[10px]">TELEFONO</h3>
+                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="text-muted-foreground hover:text-pure-black transition-colors text-sm">
                       {phone}
                     </a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-brand-gradient-medium flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-5 h-5 text-brand-teal" />
+                  <div className="w-12 h-12 rounded-full bg-neutral-grey flex items-center justify-center flex-shrink-0">
+                    <MapPin className="w-5 h-5 text-pure-black" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Indirizzo</h3>
-                    <p className="text-muted-foreground">{address}</p>
+                    <h3 className="text-label-caps text-[10px]">INDIRIZZO</h3>
+                    <p className="text-muted-foreground text-sm">{address}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-brand-gradient-medium flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-5 h-5 text-brand-teal" />
+                  <div className="w-12 h-12 rounded-full bg-neutral-grey flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-5 h-5 text-pure-black" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Orari di assistenza</h3>
-                    <p className="text-muted-foreground">Lun-Ven: 9:00-18:00</p>
-                    <p className="text-muted-foreground">Sab: 10:00-14:00</p>
+                    <h3 className="text-label-caps text-[10px]">ORARI DI ASSISTENZA</h3>
+                    <p className="text-muted-foreground text-sm">Lun-Ven: 9:00-18:00</p>
+                    <p className="text-muted-foreground text-sm">Sab: 10:00-14:00</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Contact Form */}
-            <div className="bg-brand-gradient-subtle rounded-2xl p-8">
-              <h2 className="text-2xl font-bold mb-6">
-                <span className="text-brand-gradient">
-                  Scrivici
-                </span>
+            <div className="bg-neutral-grey p-8">
+              <h2 className="text-heading-minimal text-lg mb-6">
+                SCRIVICI
               </h2>
 
               <form className="space-y-6">
@@ -137,9 +131,9 @@ export default async function ContattiPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-brand-gradient bg-brand-gradient-hover !text-white"
+                  className="w-full btn-filled"
                 >
-                  Invia messaggio
+                  INVIA MESSAGGIO
                 </Button>
               </form>
             </div>

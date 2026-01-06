@@ -78,17 +78,17 @@ function CheckoutContent() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-white dark:bg-zinc-950">
+      <div className="min-h-screen bg-white">
         <div className="container mx-4 sm:mx-6 md:mx-auto px-4 md:px-8 py-12 md:py-16">
           <div className="animate-pulse">
-            <div className="h-8 w-48 bg-zinc-200 dark:bg-zinc-800 rounded mb-8" />
+            <div className="h-8 w-48 bg-neutral-grey rounded mb-8" />
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-4">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-16 bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
+                  <div key={i} className="h-16 bg-neutral-grey" />
                 ))}
               </div>
-              <div className="h-64 bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
+              <div className="h-64 bg-neutral-grey" />
             </div>
           </div>
         </div>
@@ -104,20 +104,20 @@ function CheckoutContent() {
   // Redirect to cart if empty
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-white dark:bg-zinc-950">
+      <div className="min-h-screen bg-white">
         <div className="container mx-4 sm:mx-6 md:mx-auto px-4 md:px-8 py-16 md:py-24">
           <div className="max-w-md mx-auto text-center">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-brand-gradient-light flex items-center justify-center">
-              <ShoppingBag className="w-12 h-12 text-brand-teal" />
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-neutral-grey flex items-center justify-center">
+              <ShoppingBag className="w-12 h-12 text-pure-black" />
             </div>
-            <h1 className="text-2xl font-bold mb-4">Il carrello è vuoto</h1>
-            <p className="text-muted-foreground mb-8">
+            <h1 className="text-heading-minimal text-xl mb-4">IL CARRELLO È VUOTO</h1>
+            <p className="text-muted-foreground mb-8 text-sm">
               Aggiungi qualche prodotto prima di procedere al checkout!
             </p>
-            <Button asChild className="bg-brand-gradient hover:opacity-90 !text-white">
+            <Button asChild className="btn-filled">
               <Link href="/products">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Torna al negozio
+                TORNA AL NEGOZIO
               </Link>
             </Button>
           </div>
@@ -264,14 +264,14 @@ function CheckoutContent() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <section className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white py-12 md:py-16">
+      <section className="bg-pure-black text-white py-12 md:py-16">
         <div className="container mx-4 sm:mx-6 md:mx-auto px-4 md:px-8">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center">
-            <span className="text-brand-gradient">Checkout</span>
+          <h1 className="text-heading-minimal text-xl md:text-2xl lg:text-3xl text-center !text-white">
+            CHECKOUT
           </h1>
-          <p className="text-zinc-300 text-center mt-3">
+          <p className="text-white/70 text-center mt-3 text-sm tracking-wide">
             Completa il tuo ordine in sicurezza
           </p>
         </div>
@@ -282,9 +282,9 @@ function CheckoutContent() {
         <div className="container mx-4 sm:mx-6 md:mx-auto px-4 md:px-8">
           {/* Canceled Banner */}
           {canceled && (
-            <div className="mb-8 p-5 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
-              <p className="text-sm text-yellow-700 dark:text-yellow-300">
+            <div className="mb-8 p-5 bg-accent-yellow/10 border border-accent-yellow/30 flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-pure-black flex-shrink-0" />
+              <p className="text-sm">
                 Pagamento annullato. Puoi riprovare quando vuoi.
               </p>
             </div>
@@ -294,10 +294,10 @@ function CheckoutContent() {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
               {/* Shipping Form */}
               <div className="space-y-8">
-                <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 md:p-8">
-                  <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                    <Truck className="h-5 w-5 text-brand-teal" />
-                    Indirizzo di Spedizione
+                <div className="bg-neutral-grey border border-pure-black/10 p-6 md:p-8">
+                  <h2 className="text-heading-minimal text-sm mb-4 flex items-center gap-2">
+                    <Truck className="h-5 w-5 text-pure-black" />
+                    INDIRIZZO DI SPEDIZIONE
                   </h2>
 
                   <div className="grid gap-4">
@@ -398,7 +398,7 @@ function CheckoutContent() {
                         value={form.country}
                         onChange={handleInputChange}
                         disabled
-                        className="bg-zinc-100 dark:bg-zinc-800"
+                        className="bg-white"
                       />
                       <p className="text-xs text-muted-foreground">
                         Attualmente spediamo solo in Italia
@@ -409,17 +409,17 @@ function CheckoutContent() {
 
                 {/* Security Badges */}
                 <div className="grid grid-cols-2 gap-4 md:gap-6">
-                  <div className="flex items-center gap-3 p-5 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
-                    <ShieldCheck className="h-8 w-8 text-brand-teal" />
+                  <div className="flex items-center gap-3 p-5 bg-neutral-grey border border-pure-black/10">
+                    <ShieldCheck className="h-8 w-8 text-pure-black" />
                     <div>
-                      <p className="font-medium text-sm">Pagamento Sicuro</p>
+                      <p className="text-label-caps text-[10px]">PAGAMENTO SICURO</p>
                       <p className="text-xs text-muted-foreground">Protetto da Stripe</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-5 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
-                    <CreditCard className="h-8 w-8 text-brand-teal" />
+                  <div className="flex items-center gap-3 p-5 bg-neutral-grey border border-pure-black/10">
+                    <CreditCard className="h-8 w-8 text-pure-black" />
                     <div>
-                      <p className="font-medium text-sm">Carte Accettate</p>
+                      <p className="text-label-caps text-[10px]">CARTE ACCETTATE</p>
                       <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex</p>
                     </div>
                   </div>
@@ -428,24 +428,24 @@ function CheckoutContent() {
 
               {/* Order Summary */}
               <div className="lg:sticky lg:top-4 h-fit">
-                <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6 md:p-8">
-                  <h2 className="text-lg font-bold mb-6">Riepilogo Ordine</h2>
+                <div className="bg-neutral-grey border border-pure-black/10 p-6 md:p-8">
+                  <h2 className="text-heading-minimal text-sm mb-6">RIEPILOGO ORDINE</h2>
 
                   {/* Coupon Input */}
-                  <div className="mb-6 pb-6 border-b border-zinc-200 dark:border-zinc-700">
+                  <div className="mb-6 pb-6 border-b border-pure-black/10">
                     <div className="flex items-center gap-2 mb-3">
-                      <Tag className="h-4 w-4 text-brand-teal" />
-                      <span className="text-sm font-medium">Codice Sconto</span>
+                      <Tag className="h-4 w-4 text-pure-black" />
+                      <span className="text-label-caps text-[10px]">CODICE SCONTO</span>
                     </div>
 
                     {appliedCoupon ? (
-                      <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                      <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200">
                         <div className="flex items-center gap-2">
                           <Check className="h-4 w-4 text-green-600" />
-                          <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                          <span className="text-sm font-medium text-green-700">
                             {appliedCoupon.code}
                           </span>
-                          <span className="text-xs text-green-600 dark:text-green-400">
+                          <span className="text-xs text-green-600">
                             {appliedCoupon.discount_type === 'percentage'
                               ? `-${appliedCoupon.discount_value}%`
                               : `-€${appliedCoupon.discount_value.toFixed(2)}`}
@@ -454,7 +454,7 @@ function CheckoutContent() {
                         <button
                           type="button"
                           onClick={handleRemoveCoupon}
-                          className="p-1 hover:bg-green-100 dark:hover:bg-green-800/30 rounded"
+                          className="p-1 hover:bg-green-100"
                         >
                           <X className="h-4 w-4 text-green-600" />
                         </button>
@@ -492,7 +492,7 @@ function CheckoutContent() {
                     )}
 
                     {couponError && (
-                      <p className="mt-2 text-xs text-red-600 dark:text-red-400">
+                      <p className="mt-2 text-xs text-accent-red">
                         {couponError}
                       </p>
                     )}
@@ -502,7 +502,7 @@ function CheckoutContent() {
                   <div className="space-y-4 mb-8">
                     {items.map((item) => (
                       <div key={item.variantId} className="flex gap-3">
-                        <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex-shrink-0">
+                        <div className="relative w-16 h-16 overflow-hidden bg-white flex-shrink-0">
                           {item.imageUrl ? (
                             <Image
                               src={item.imageUrl}
@@ -515,7 +515,7 @@ function CheckoutContent() {
                               <ShoppingBag className="w-6 h-6 text-zinc-400" />
                             </div>
                           )}
-                          <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-teal text-white text-xs rounded-full flex items-center justify-center">
+                          <span className="absolute -top-1 -right-1 w-5 h-5 bg-pure-black text-white text-xs flex items-center justify-center">
                             {item.quantity}
                           </span>
                         </div>
@@ -537,39 +537,39 @@ function CheckoutContent() {
                   </div>
 
                   {/* Totals */}
-                  <div className="space-y-2 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                  <div className="space-y-2 pt-4 border-t border-pure-black/10">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Subtotale</span>
-                      <span>€{cartSubtotal.toFixed(2)}</span>
+                      <span className="text-price-mono">€{cartSubtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Spedizione</span>
-                      <span className={shippingCost === 0 ? 'text-green-600 font-medium' : ''}>
+                      <span className={`text-price-mono ${shippingCost === 0 ? 'text-green-600 font-medium' : ''}`}>
                         {shippingCost === 0 ? 'Gratuita' : `€${shippingCost.toFixed(2)}`}
                       </span>
                     </div>
                     {appliedCoupon && discountAmount > 0 && (
                       <div className="flex justify-between text-sm">
-                        <span className="text-green-600 dark:text-green-400">
+                        <span className="text-green-600">
                           Sconto ({appliedCoupon.code})
                         </span>
-                        <span className="text-green-600 dark:text-green-400 font-medium">
+                        <span className="text-green-600 font-medium text-price-mono">
                           -€{discountAmount.toFixed(2)}
                         </span>
                       </div>
                     )}
-                    <div className="flex justify-between text-lg font-bold pt-2 border-t border-zinc-200 dark:border-zinc-700">
+                    <div className="flex justify-between text-lg font-bold pt-2 border-t border-pure-black/10">
                       <span>Totale</span>
-                      <span className="text-brand-teal">
+                      <span className="text-price-mono">
                         {total === 0 ? 'Gratuito!' : `€${total.toFixed(2)}`}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground">IVA inclusa</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wide">IVA inclusa</p>
                   </div>
 
                   {/* Error Message */}
                   {error && (
-                    <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2 text-sm text-red-700 dark:text-red-300">
+                    <div className="mt-4 p-3 bg-accent-red/10 border border-accent-red/30 flex items-center gap-2 text-sm text-accent-red">
                       <AlertCircle className="h-4 w-4 flex-shrink-0" />
                       {error}
                     </div>
@@ -578,24 +578,24 @@ function CheckoutContent() {
                   {/* Submit Button - minimal design */}
                   <Button
                     type="submit"
-                    className="w-full mt-6 h-12 text-base font-semibold bg-brand-gradient hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] !text-white shadow-lg rounded-lg transition-all duration-200"
+                    className="w-full mt-6 h-12 text-xs font-bold btn-filled transition-all duration-200"
                     size="lg"
                     disabled={loading}
                   >
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Elaborazione...
+                        ELABORAZIONE...
                       </>
                     ) : total === 0 ? (
                       <>
                         <Check className="mr-2 h-5 w-5" />
-                        Completa Ordine Gratuito
+                        COMPLETA ORDINE GRATUITO
                       </>
                     ) : (
                       <>
                         <CreditCard className="mr-2 h-5 w-5" />
-                        Paga €{total.toFixed(2)}
+                        PAGA €{total.toFixed(2)}
                       </>
                     )}
                   </Button>
@@ -620,8 +620,8 @@ function CheckoutContent() {
 export default function CheckoutPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-white dark:bg-zinc-950 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-teal" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-pure-black" />
       </div>
     }>
       <CheckoutContent />

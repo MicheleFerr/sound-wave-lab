@@ -24,13 +24,13 @@ export default function CartPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-white dark:bg-zinc-950">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-8">
           <div className="animate-pulse">
-            <div className="h-8 w-48 bg-zinc-200 dark:bg-zinc-800 rounded mb-8" />
+            <div className="h-8 w-48 bg-neutral-grey rounded mb-8" />
             <div className="space-y-4">
               {[1, 2].map((i) => (
-                <div key={i} className="h-32 bg-zinc-200 dark:bg-zinc-800 rounded-lg" />
+                <div key={i} className="h-32 bg-neutral-grey rounded-none" />
               ))}
             </div>
           </div>
@@ -50,20 +50,20 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-white dark:bg-zinc-950">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-md mx-auto text-center">
-            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-brand-gradient-light flex items-center justify-center">
-              <ShoppingBag className="w-12 h-12 text-brand-teal" />
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-neutral-grey flex items-center justify-center">
+              <ShoppingBag className="w-12 h-12 text-pure-black" />
             </div>
-            <h1 className="text-2xl font-bold mb-4">Il tuo carrello è vuoto</h1>
-            <p className="text-muted-foreground mb-8">
+            <h1 className="text-heading-minimal text-xl mb-4">IL TUO CARRELLO È VUOTO</h1>
+            <p className="text-muted-foreground mb-8 text-sm">
               Esplora il nostro catalogo e aggiungi i prodotti che ti piacciono!
             </p>
-            <Button asChild className="bg-brand-gradient hover:opacity-90 !text-white">
+            <Button asChild className="btn-filled">
               <Link href="/products">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Scopri i prodotti
+                SCOPRI I PRODOTTI
               </Link>
             </Button>
           </div>
@@ -73,14 +73,14 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <section className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white py-8 md:py-12">
+      <section className="bg-pure-black text-white py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center">
-            <span className="text-brand-gradient">Carrello</span>
+          <h1 className="text-heading-minimal text-xl md:text-2xl lg:text-3xl text-center !text-white">
+            CARRELLO
           </h1>
-          <p className="text-zinc-300 text-center mt-2">
+          <p className="text-white/70 text-center mt-2 text-sm tracking-wide">
             {items.length} {items.length === 1 ? 'articolo' : 'articoli'} nel carrello
           </p>
         </div>
@@ -94,20 +94,20 @@ export default function CartPage() {
             <div className="lg:col-span-2 space-y-4">
               {/* Free Shipping Banner */}
               {remainingForFreeShipping > 0 && (
-                <div className="bg-brand-gradient-light border border-brand-teal/30 rounded-lg p-4">
+                <div className="bg-neutral-grey border border-pure-black/10 p-4">
                   <div className="flex items-center gap-3">
-                    <Truck className="h-5 w-5 text-brand-teal flex-shrink-0" />
-                    <div>
+                    <Truck className="h-5 w-5 text-pure-black flex-shrink-0" />
+                    <div className="flex-1">
                       <p className="text-sm font-medium">
                         Aggiungi ancora{' '}
-                        <span className="text-brand-teal font-bold">
+                        <span className="text-pure-black font-bold">
                           €{remainingForFreeShipping.toFixed(2)}
                         </span>{' '}
                         per ottenere la spedizione gratuita!
                       </p>
-                      <div className="mt-2 h-2 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+                      <div className="mt-2 h-[2px] bg-pure-black/20 overflow-hidden">
                         <div
-                          className="h-full bg-brand-gradient transition-all duration-300"
+                          className="h-full bg-pure-black transition-all duration-300"
                           style={{
                             width: `${Math.min((cartSubtotal / FREE_SHIPPING_THRESHOLD) * 100, 100)}%`,
                           }}
@@ -122,11 +122,11 @@ export default function CartPage() {
               {items.map((item) => (
                 <div
                   key={item.variantId}
-                  className="flex gap-4 p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800"
+                  className="flex gap-4 p-4 bg-neutral-grey border border-pure-black/10"
                 >
                   {/* Product Image */}
                   <Link href={`/products/${item.productSlug}`} className="flex-shrink-0">
-                    <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                    <div className="relative w-24 h-24 md:w-32 md:h-32 overflow-hidden bg-white">
                       {item.imageUrl ? (
                         <Image
                           src={item.imageUrl}
@@ -146,9 +146,9 @@ export default function CartPage() {
                   <div className="flex-1 min-w-0">
                     <Link
                       href={`/products/${item.productSlug}`}
-                      className="font-semibold hover:text-brand-teal transition-colors line-clamp-2"
+                      className="text-heading-minimal text-xs hover:underline line-clamp-2"
                     >
-                      {item.productName}
+                      {item.productName.toUpperCase()}
                     </Link>
 
                     {/* Variant Attributes */}
@@ -157,7 +157,7 @@ export default function CartPage() {
                         {Object.entries(item.attributes).map(([key, value]) => (
                           <span
                             key={key}
-                            className="text-xs px-2 py-1 bg-zinc-200 dark:bg-zinc-700 rounded"
+                            className="text-[10px] px-2 py-1 bg-white border border-pure-black/10 uppercase tracking-wide"
                           >
                             {key}: {value}
                           </span>
@@ -198,7 +198,7 @@ export default function CartPage() {
                       </div>
 
                       <div className="text-right">
-                        <p className="font-bold text-brand-teal">
+                        <p className="text-price-mono font-bold">
                           €{(item.price * item.quantity).toFixed(2)}
                         </p>
                         {item.quantity > 1 && (
@@ -214,7 +214,7 @@ export default function CartPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="flex-shrink-0 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
+                    className="flex-shrink-0 text-accent-red hover:text-accent-red hover:bg-accent-red/10"
                     onClick={() => removeItem(item.variantId)}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -224,69 +224,69 @@ export default function CartPage() {
 
               {/* Actions */}
               <div className="flex flex-wrap gap-4 pt-4">
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild className="btn-outline text-xs">
                   <Link href="/products">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    Continua lo shopping
+                    CONTINUA LO SHOPPING
                   </Link>
                 </Button>
                 <Button
                   variant="outline"
-                  className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
+                  className="btn-outline text-xs !border-accent-red !text-accent-red hover:!bg-accent-red hover:!text-white"
                   onClick={() => clearCart()}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Svuota carrello
+                  SVUOTA CARRELLO
                 </Button>
               </div>
             </div>
 
             {/* Order Summary */}
             <div className="lg:col-span-1">
-              <div className="sticky top-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800 p-6">
-                <h2 className="text-lg font-bold mb-4">Riepilogo ordine</h2>
+              <div className="sticky top-4 bg-neutral-grey border border-pure-black/10 p-6">
+                <h2 className="text-heading-minimal text-sm mb-4">RIEPILOGO ORDINE</h2>
 
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotale</span>
-                    <span>€{cartSubtotal.toFixed(2)}</span>
+                    <span className="text-price-mono">€{cartSubtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Spedizione</span>
-                    <span className={shippingCost === 0 ? 'text-green-600 font-medium' : ''}>
+                    <span className={`text-price-mono ${shippingCost === 0 ? 'text-green-600 font-medium' : ''}`}>
                       {shippingCost === 0 ? 'Gratuita' : `€${shippingCost.toFixed(2)}`}
                     </span>
                   </div>
-                  <div className="border-t border-zinc-200 dark:border-zinc-700 pt-3">
+                  <div className="border-t border-pure-black/10 pt-3">
                     <div className="flex justify-between text-lg font-bold">
                       <span>Totale</span>
-                      <span className="text-brand-teal">€{total.toFixed(2)}</span>
+                      <span className="text-price-mono">€{total.toFixed(2)}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">IVA inclusa</p>
+                    <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wide">IVA inclusa</p>
                   </div>
                 </div>
 
                 <Button
-                  className="w-full mt-6 bg-brand-gradient hover:opacity-90 text-white"
+                  className="w-full mt-6 btn-filled"
                   size="lg"
                   onClick={handleCheckout}
                 >
                   <CreditCard className="mr-2 h-4 w-4" />
-                  Procedi al checkout
+                  PROCEDI AL CHECKOUT
                 </Button>
 
                 {/* Trust Badges */}
-                <div className="mt-6 pt-6 border-t border-zinc-200 dark:border-zinc-700">
-                  <div className="grid grid-cols-2 gap-4 text-xs text-muted-foreground">
+                <div className="mt-6 pt-6 border-t border-pure-black/10">
+                  <div className="grid grid-cols-2 gap-4 text-[10px] text-muted-foreground uppercase tracking-wide">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-brand-gradient-light flex items-center justify-center">
-                        <Truck className="w-4 h-4 text-brand-teal" />
+                      <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                        <Truck className="w-4 h-4 text-pure-black" />
                       </div>
                       <span>Spedizione veloce</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-brand-gradient-light flex items-center justify-center">
-                        <CreditCard className="w-4 h-4 text-brand-teal" />
+                      <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                        <CreditCard className="w-4 h-4 text-pure-black" />
                       </div>
                       <span>Pagamento sicuro</span>
                     </div>

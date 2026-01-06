@@ -65,14 +65,14 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }))
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <section className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white py-8 md:py-12">
+      <section className="bg-pure-black text-white py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center">
-            <span className="text-brand-gradient">Cerca Prodotti</span>
+          <h1 className="text-heading-minimal text-xl md:text-2xl lg:text-3xl text-center !text-white">
+            CERCA PRODOTTI
           </h1>
-          <p className="text-zinc-300 text-center mt-2">
+          <p className="text-white/70 text-center mt-2 text-sm tracking-wide">
             Trova la maglietta perfetta per te
           </p>
         </div>
@@ -90,17 +90,17 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           {query ? (
             <>
               <div className="mb-6 text-center">
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {products.length > 0 ? (
                     <>
                       <span className="font-semibold text-foreground">{products.length}</span>{' '}
                       {products.length === 1 ? 'risultato' : 'risultati'} per{' '}
-                      <span className="font-semibold text-brand-teal">&quot;{query}&quot;</span>
+                      <span className="font-semibold text-pure-black">&quot;{query}&quot;</span>
                     </>
                   ) : (
                     <>
                       Nessun risultato per{' '}
-                      <span className="font-semibold text-brand-teal">&quot;{query}&quot;</span>
+                      <span className="font-semibold text-pure-black">&quot;{query}&quot;</span>
                     </>
                   )}
                 </p>
@@ -111,11 +111,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   <ProductGrid products={products} columns={4} />
                 ) : (
                   <div className="text-center py-16">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-gradient-light flex items-center justify-center">
-                      <Search className="w-8 h-8 text-brand-teal" />
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-grey flex items-center justify-center">
+                      <Search className="w-8 h-8 text-pure-black" />
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">Nessun prodotto trovato</h3>
-                    <p className="text-muted-foreground max-w-md mx-auto">
+                    <h3 className="text-heading-minimal text-sm mb-2">NESSUN PRODOTTO TROVATO</h3>
+                    <p className="text-muted-foreground max-w-md mx-auto text-sm">
                       Prova con termini di ricerca diversi o esplora le nostre categorie
                     </p>
                   </div>
@@ -124,11 +124,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             </>
           ) : (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-gradient-light flex items-center justify-center">
-                <Search className="w-8 h-8 text-brand-teal" />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-grey flex items-center justify-center">
+                <Search className="w-8 h-8 text-pure-black" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">Cosa stai cercando?</h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
+              <h3 className="text-heading-minimal text-sm mb-2">COSA STAI CERCANDO?</h3>
+              <p className="text-muted-foreground max-w-md mx-auto text-sm">
                 Inserisci il nome del prodotto o una descrizione per iniziare la ricerca
               </p>
             </div>

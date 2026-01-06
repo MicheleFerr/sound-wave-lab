@@ -40,10 +40,10 @@ export function SearchForm({ initialQuery = '' }: SearchFormProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Cerca prodotti..."
+            placeholder="CERCA PRODOTTI..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="pl-10 pr-10 h-12 text-lg"
+            className="pl-10 pr-10 h-12 text-sm tracking-wide uppercase"
             autoComplete="off"
           />
           {query && (
@@ -56,9 +56,9 @@ export function SearchForm({ initialQuery = '' }: SearchFormProps) {
             </button>
           )}
         </div>
-        <Button type="submit" size="lg" className="bg-brand-gradient hover:opacity-90 !text-white">
+        <Button type="submit" size="lg" className="bg-brand-gradient hover:opacity-90 !text-white text-xs font-bold tracking-wider uppercase">
           <Search className="h-5 w-5 md:mr-2" />
-          <span className="hidden md:inline">Cerca</span>
+          <span className="hidden md:inline">CERCA</span>
         </Button>
       </div>
     </form>

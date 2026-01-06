@@ -82,17 +82,17 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-t bg-muted/50 pb-20 md:pb-0">
+    <footer className="border-t border-pure-black/10 bg-neutral-grey pb-20 md:pb-0">
       <div className="container py-8 md:py-12">
         {/* Main Footer Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-1 lg:col-span-2">
             <Link href="/" className="inline-block">
-              <h3 className="font-bold text-lg mb-4">Sound Wave Lab</h3>
+              <h3 className="text-heading-minimal text-base tracking-wider mb-4">SOUND WAVE LAB</h3>
             </Link>
-            <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-              Magliette uniche con design originali per chi ama distinguersi.
+            <p className="text-xs tracking-wide opacity-70 mb-6 max-w-xs">
+              MAGLIETTE UNICHE CON DESIGN ORIGINALI PER CHI AMA DISTINGUERSI.
             </p>
 
             {/* Social Links */}
@@ -112,13 +112,13 @@ export function Footer() {
 
           {/* Negozio Links */}
           <div>
-            <h4 className="font-medium mb-4">{footerLinks.negozio.title}</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="text-label-caps text-[10px] tracking-wider mb-4">{footerLinks.negozio.title.toUpperCase()}</h4>
+            <ul className="space-y-2">
               {footerLinks.negozio.links.map(({ label, href }) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-xs tracking-wide opacity-70 hover:opacity-100 transition-opacity uppercase"
                   >
                     {label}
                   </Link>
@@ -129,13 +129,13 @@ export function Footer() {
 
           {/* Info Links */}
           <div>
-            <h4 className="font-medium mb-4">{footerLinks.info.title}</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="text-label-caps text-[10px] tracking-wider mb-4">{footerLinks.info.title.toUpperCase()}</h4>
+            <ul className="space-y-2">
               {footerLinks.info.links.map(({ label, href }) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-xs tracking-wide opacity-70 hover:opacity-100 transition-opacity uppercase"
                   >
                     {label}
                   </Link>
@@ -146,13 +146,13 @@ export function Footer() {
 
           {/* Legal Links */}
           <div>
-            <h4 className="font-medium mb-4">{footerLinks.legal.title}</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="text-label-caps text-[10px] tracking-wider mb-4">{footerLinks.legal.title.toUpperCase()}</h4>
+            <ul className="space-y-2">
               {footerLinks.legal.links.map(({ label, href }) => (
                 <li key={label}>
                   <Link
                     href={href}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-xs tracking-wide opacity-70 hover:opacity-100 transition-opacity uppercase"
                   >
                     {label}
                   </Link>
@@ -163,15 +163,15 @@ export function Footer() {
         </div>
 
         {/* Payment Methods Section */}
-        <div className="mt-8 pt-8 border-t">
+        <div className="mt-8 pt-8 border-t border-pure-black/10">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex flex-col gap-2">
-              <span className="text-sm text-muted-foreground">Metodi di pagamento accettati</span>
+              <span className="text-label-caps text-[9px] tracking-wider opacity-70">METODI DI PAGAMENTO ACCETTATI</span>
               <div className="flex items-center gap-3 flex-wrap">
                 {paymentLogos.map((logo) => (
                   <div
                     key={logo.name}
-                    className="relative h-8 w-auto bg-white dark:bg-white rounded px-2 py-1 flex items-center justify-center"
+                    className="relative h-8 w-auto bg-white border border-pure-black/10 px-2 py-1 flex items-center justify-center"
                   >
                     <Image
                       src={logo.src}
@@ -189,9 +189,9 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="mt-8 pt-8 border-t text-center md:text-left">
-          <p className="text-sm text-muted-foreground">
-            &copy; {currentYear} Sound Wave Lab. Tutti i diritti riservati.
+        <div className="mt-8 pt-8 border-t border-pure-black/10 text-center md:text-left">
+          <p className="text-xs tracking-wide opacity-60">
+            &copy; {currentYear} SOUND WAVE LAB. TUTTI I DIRITTI RISERVATI.
           </p>
         </div>
       </div>

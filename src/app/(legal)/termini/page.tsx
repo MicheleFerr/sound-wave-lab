@@ -11,16 +11,14 @@ export default async function TerminiPage() {
   const pageContent = await getSiteSetting<PageContent>('page_termini')
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white py-12 md:py-16">
+      <section className="bg-pure-black text-white py-16 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="text-brand-gradient">
-              {pageContent?.title || 'Termini e Condizioni'}
-            </span>
+          <h1 className="text-heading-minimal text-2xl md:text-3xl lg:text-4xl !text-white mb-4">
+            {(pageContent?.title || 'Termini e Condizioni').toUpperCase()}
           </h1>
-          <p className="text-zinc-400 text-sm">
+          <p className="text-white/70 text-sm tracking-wide">
             Ultimo aggiornamento: Gennaio 2026
           </p>
         </div>
@@ -29,7 +27,7 @@ export default async function TerminiPage() {
       {/* Content Section */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto prose prose-zinc dark:prose-invert">
+          <div className="max-w-3xl mx-auto prose prose-neutral">
             <p className="lead">
               {pageContent?.content || 'Benvenuto su Sound Wave Lab. Utilizzando il nostro sito accetti i seguenti termini e condizioni.'}
             </p>
