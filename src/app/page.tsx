@@ -1,10 +1,10 @@
 // src/app/page.tsx
 import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowRight, Headphones, Music, Radio } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
 import { FeaturedProductsSlider } from '@/components/products'
+import { CategoryGrid } from '@/components/home'
 
 async function getFeaturedProducts() {
   const supabase = await createClient()
@@ -84,7 +84,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Categories Section - Off-White Industrial Style */}
       <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 md:mb-12">
@@ -92,37 +92,7 @@ export default async function Home() {
             <p className="text-label-caps text-[10px] mt-3 opacity-60">TROVA IL DESIGN PERFETTO PER TE</p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/products?category=${category.slug}`}
-                className="group relative aspect-square rounded-xl overflow-hidden bg-neutral-grey"
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10"></div>
-                {category.image_url ? (
-                  <Image
-                    src={category.image_url}
-                    alt={category.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    unoptimized={category.image_url.startsWith('/api/placeholder')}
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full">
-                    {category.slug === 'synth' && <Headphones className="w-16 h-16 text-zinc-400" />}
-                    {category.slug === 'dj' && <Radio className="w-16 h-16 text-zinc-400" />}
-                    {category.slug === 'vintage' && <Music className="w-16 h-16 text-zinc-400" />}
-                    {category.slug === 'minimal' && <div className="w-16 h-16 border-4 border-zinc-400 rounded-full" />}
-                  </div>
-                )}
-                <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
-                  <h3 className="text-white text-heading-minimal text-sm tracking-wider !text-white">{category.name.toUpperCase()}</h3>
-                  <p className="text-white/70 text-xs mt-1 line-clamp-1 tracking-wide">{category.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <CategoryGrid categories={categories} />
         </div>
       </section>
 

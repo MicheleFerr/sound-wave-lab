@@ -54,10 +54,16 @@ const CATEGORY_ICONS: Record<string, string> = {
   trending: 'M3 17l6-6 4 4 8-8M21 7v6h-6'
 }
 
-const GRADIENTS = {
-  teal: { start: '#1a5f5f', end: '#2a8f8f' },
-  orange: { start: '#f39c12', end: '#f5a623' },
-  gradient: { start: '#1a5f5f', end: '#f39c12' }
+// Category index for numbering
+const CATEGORY_INDEX: Record<string, string> = {
+  anime: '01',
+  gym: '02',
+  vintage: '03',
+  minimal: '04',
+  plugins: '05',
+  synths: '06',
+  gaming: '07',
+  tech: '08',
 }
 
 export async function GET(
@@ -65,17 +71,16 @@ export async function GET(
   { params }: { params: Promise<{ category: string }> }
 ) {
   const { category } = await params
-  const searchParams = request.nextUrl.searchParams
-  const variant = (searchParams.get('variant') || 'gradient') as keyof typeof GRADIENTS
 
-  // Get category name and icon
+  // Get category name
   const categoryName = category
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
+    .toUpperCase()
 
   const iconPath = CATEGORY_ICONS[category] || CATEGORY_ICONS['bundles']
-  const colors = GRADIENTS[variant] || GRADIENTS.gradient
+  const categoryIndex = CATEGORY_INDEX[category] || '00'
 
   return new ImageResponse(
     (
@@ -85,47 +90,201 @@ export async function GET(
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: `linear-gradient(135deg, ${colors.start} 0%, ${colors.end} 100%)`,
+          background: '#000000',
           position: 'relative',
+          fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
         }}
       >
-        {/* Soundwave pattern background */}
+        {/* Grid pattern background */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-around',
-            opacity: 0.1,
+            flexWrap: 'wrap',
           }}
         >
-          {[...Array(20)].map((_, i) => (
+          {/* Vertical grid lines */}
+          {[...Array(8)].map((_, i) => (
             <div
-              key={i}
+              key={`v-${i}`}
               style={{
-                width: 4,
-                height: `${30 + Math.sin(i) * 20}%`,
-                background: 'white',
-                borderRadius: 2,
+                position: 'absolute',
+                left: `${(i + 1) * 12.5}%`,
+                top: 0,
+                bottom: 0,
+                width: 1,
+                background: 'rgba(255, 255, 255, 0.05)',
+              }}
+            />
+          ))}
+          {/* Horizontal grid lines */}
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={`h-${i}`}
+              style={{
+                position: 'absolute',
+                top: `${(i + 1) * 16.67}%`,
+                left: 0,
+                right: 0,
+                height: 1,
+                background: 'rgba(255, 255, 255, 0.05)',
               }}
             />
           ))}
         </div>
 
-        {/* Icon */}
-        <svg
-          width="140"
-          height="140"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
+        {/* Diagonal stripes - top right corner (Off-White signature) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: 200,
+            height: 200,
+            overflow: 'hidden',
+            display: 'flex',
+          }}
         >
-          <path d={iconPath} />
-        </svg>
+          <div
+            style={{
+              position: 'absolute',
+              top: -100,
+              right: -100,
+              width: 400,
+              height: 400,
+              background: 'repeating-linear-gradient(45deg, transparent, transparent 8px, #FFFF00 8px, #FFFF00 16px)',
+              opacity: 0.8,
+            }}
+          />
+        </div>
+
+        {/* Diagonal stripes - bottom left corner */}
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: 120,
+            height: 120,
+            overflow: 'hidden',
+            display: 'flex',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              bottom: -60,
+              left: -60,
+              width: 240,
+              height: 240,
+              background: 'repeating-linear-gradient(45deg, transparent, transparent 6px, #FFFF00 6px, #FFFF00 10px)',
+              opacity: 0.4,
+            }}
+          />
+        </div>
+
+        {/* Center content */}
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 60,
+          }}
+        >
+          {/* Icon with border */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 160,
+              height: 160,
+              border: '3px solid white',
+              marginBottom: 40,
+            }}
+          >
+            <svg
+              width="80"
+              height="80"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="1.5"
+            >
+              <path d={iconPath} />
+            </svg>
+          </div>
+
+          {/* Category name with quotes */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 48, fontWeight: 700 }}>&quot;</span>
+            <span
+              style={{
+                color: 'white',
+                fontSize: 48,
+                fontWeight: 700,
+                letterSpacing: '0.15em',
+              }}
+            >
+              {categoryName}
+            </span>
+            <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: 48, fontWeight: 700 }}>&quot;</span>
+          </div>
+        </div>
+
+        {/* Bottom bar with index */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '20px 40px',
+            borderTop: '2px solid rgba(255, 255, 255, 0.2)',
+          }}
+        >
+          <span
+            style={{
+              color: 'rgba(255, 255, 255, 0.5)',
+              fontSize: 14,
+              letterSpacing: '0.2em',
+              fontWeight: 700,
+            }}
+          >
+            SOUND WAVE LAB
+          </span>
+          <span
+            style={{
+              color: '#FFFF00',
+              fontSize: 32,
+              fontWeight: 700,
+              fontFamily: 'SF Mono, Monaco, monospace',
+            }}
+          >
+            {categoryIndex}
+          </span>
+        </div>
+
+        {/* Corner markers (construction/technical style) */}
+        {/* Top left */}
+        <div style={{ position: 'absolute', top: 20, left: 20, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ width: 30, height: 2, background: 'white' }} />
+          <div style={{ width: 2, height: 30, background: 'white' }} />
+        </div>
+        {/* Bottom right */}
+        <div style={{ position: 'absolute', bottom: 60, right: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+          <div style={{ width: 2, height: 30, background: 'white' }} />
+          <div style={{ width: 30, height: 2, background: 'white' }} />
+        </div>
       </div>
     ),
     {
