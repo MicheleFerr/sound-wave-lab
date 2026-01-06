@@ -1,6 +1,7 @@
 // src/app/api/checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 
 // Lazy load stripe only when needed (for paid orders)
 const getStripe = async () => {
@@ -87,8 +88,9 @@ export async function POST(request: NextRequest) {
     const orderNumber = generateOrderNumber()
 
     // Helper function to create order and order items
+    // Uses admin client to bypass RLS for order creation
     const createOrderInDatabase = async (status: string, stripeSessionId: string | null) => {
-      const { error: orderError } = await supabase.from('orders').insert({
+      const { error: orderError } = await supabaseAdmin.from('orders').insert({
         order_number: orderNumber,
         user_id: user?.id || null,
         stripe_session_id: stripeSessionId,
@@ -111,7 +113,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Get the created order ID for order items
-      const { data: orderData } = await supabase
+      const { data: orderData } = await supabaseAdmin
         .from('orders')
         .select('id')
         .eq('order_number', orderNumber)
@@ -130,7 +132,7 @@ export async function POST(request: NextRequest) {
           total_price: item.price * item.quantity,
         }))
 
-        await supabase.from('order_items').insert(orderItems)
+        await supabaseAdmin.from('order_items').insert(orderItems)
       }
 
       return orderData
@@ -151,14 +153,14 @@ export async function POST(request: NextRequest) {
       // Update coupon usage - increment current_uses
       if (coupon?.id) {
         // First get current value, then increment
-        const { data: currentCoupon } = await supabase
+        const { data: currentCoupon } = await supabaseAdmin
           .from('coupons')
           .select('current_uses')
           .eq('id', coupon.id)
           .single()
 
         if (currentCoupon) {
-          await supabase
+          await supabaseAdmin
             .from('coupons')
             .update({ current_uses: (currentCoupon.current_uses || 0) + 1 })
             .eq('id', coupon.id)
