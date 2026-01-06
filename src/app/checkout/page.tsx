@@ -79,7 +79,7 @@ function CheckoutContent() {
   if (!mounted) {
     return (
       <div className="min-h-screen bg-white dark:bg-zinc-950">
-        <div className="container mx-auto px-6 md:px-8 py-12 md:py-16">
+        <div className="container mx-4 sm:mx-6 md:mx-auto px-4 md:px-8 py-12 md:py-16">
           <div className="animate-pulse">
             <div className="h-8 w-48 bg-zinc-200 dark:bg-zinc-800 rounded mb-8" />
             <div className="grid lg:grid-cols-2 gap-8">
@@ -105,7 +105,7 @@ function CheckoutContent() {
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-white dark:bg-zinc-950">
-        <div className="container mx-auto px-6 md:px-8 py-16 md:py-24">
+        <div className="container mx-4 sm:mx-6 md:mx-auto px-4 md:px-8 py-16 md:py-24">
           <div className="max-w-md mx-auto text-center">
             <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-brand-gradient-light flex items-center justify-center">
               <ShoppingBag className="w-12 h-12 text-brand-teal" />
@@ -267,7 +267,7 @@ function CheckoutContent() {
     <div className="min-h-screen bg-white dark:bg-zinc-950">
       {/* Header */}
       <section className="bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white py-12 md:py-16">
-        <div className="container mx-auto px-6 md:px-8">
+        <div className="container mx-4 sm:mx-6 md:mx-auto px-4 md:px-8">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center">
             <span className="text-brand-gradient">Checkout</span>
           </h1>
@@ -279,7 +279,7 @@ function CheckoutContent() {
 
       {/* Checkout Content */}
       <section className="py-12 md:py-16">
-        <div className="container mx-auto px-6 md:px-8">
+        <div className="container mx-4 sm:mx-6 md:mx-auto px-4 md:px-8">
           {/* Canceled Banner */}
           {canceled && (
             <div className="mb-8 p-5 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg flex items-center gap-3">

@@ -22,7 +22,7 @@ export function CartDrawer() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
-      <SheetContent className="flex flex-col w-full sm:max-w-lg">
+      <SheetContent className="flex flex-col w-full sm:max-w-lg px-4 sm:px-6">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5" />
@@ -41,7 +41,7 @@ export function CartDrawer() {
         ) : (
           <>
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto -mx-6 px-6">
+            <div className="flex-1 overflow-y-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
               <div className="divide-y">
                 {items.map((item) => (
                   <CartItem key={item.variantId} item={item} />

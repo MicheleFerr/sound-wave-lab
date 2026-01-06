@@ -156,12 +156,21 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      // Update coupon usage
+      // Update coupon usage - increment current_uses
       if (coupon?.id) {
-        await supabase
+        // First get current value, then increment
+        const { data: currentCoupon } = await supabase
           .from('coupons')
-          .update({ current_uses: supabase.sql`current_uses + 1` })
+          .select('current_uses')
           .eq('id', coupon.id)
+          .single()
+
+        if (currentCoupon) {
+          await supabase
+            .from('coupons')
+            .update({ current_uses: (currentCoupon.current_uses || 0) + 1 })
+            .eq('id', coupon.id)
+        }
       }
 
       // Redirect directly to success page with order number
