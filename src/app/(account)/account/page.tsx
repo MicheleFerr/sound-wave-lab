@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { ProfileForm } from '@/components/account/ProfileForm'
+import { ChangePasswordForm } from '@/components/account/ChangePasswordForm'
 
 export const metadata: Metadata = {
   title: 'Il mio account | Sound Wave Lab',
@@ -56,13 +57,11 @@ export default async function AccountPage() {
         <CardHeader>
           <CardTitle>Sicurezza</CardTitle>
           <CardDescription>
-            Gestisci la sicurezza del tuo account
+            Cambia la password del tuo account
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Per cambiare la password, usa la funzione &quot;Password dimenticata&quot; nella pagina di login.
-          </p>
+          <ChangePasswordForm />
         </CardContent>
       </Card>
     </div>
