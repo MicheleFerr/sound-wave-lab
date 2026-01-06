@@ -26,7 +26,7 @@ async function getProducts(categorySlug?: string, sort?: string, search?: string
       is_featured,
       category:categories(id, name, slug),
       variants:product_variants(id, price, compare_at_price),
-      images:product_images(url, alt_text)
+      images:product_images(url, alt_text, sort_order)
     `)
     .eq('is_active', true)
 

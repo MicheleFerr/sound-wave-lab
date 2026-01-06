@@ -21,13 +21,19 @@ interface ProductCardProps {
     images: Array<{
       url: string
       alt_text?: string | null
+      sort_order?: number
     }>
     is_featured?: boolean
   }
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const primaryImage = product.images[0]
+  // Sort images by sort_order for consistent primary/secondary
+  const sortedImages = [...product.images].sort(
+    (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
+  )
+  const primaryImage = sortedImages[0]
+  const secondaryImage = sortedImages[1] // For hover effect (Off-White style)
   const lowestPrice = Math.min(...product.variants.map(v => v.price))
   const highestComparePrice = Math.max(
     ...product.variants.map(v => v.compare_at_price || 0)
@@ -39,13 +45,30 @@ export function ProductCard({ product }: ProductCardProps) {
       <Link href={`/products/${product.slug}`}>
         <div className="relative aspect-square overflow-hidden bg-neutral-grey">
           {primaryImage ? (
-            <Image
-              src={primaryImage.url}
-              alt={primaryImage.alt_text || product.name}
-              fill
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            />
+            <>
+              {/* Primary image - visible by default, fades out on hover if secondary exists */}
+              <Image
+                src={primaryImage.url}
+                alt={primaryImage.alt_text || product.name}
+                fill
+                className={`object-cover transition-all duration-500 ease-out ${
+                  secondaryImage
+                    ? 'group-hover:opacity-0 group-hover:scale-105'
+                    : 'group-hover:scale-110'
+                }`}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              />
+              {/* Secondary image - hidden by default, fades in on hover (Off-White effect) */}
+              {secondaryImage && (
+                <Image
+                  src={secondaryImage.url}
+                  alt={secondaryImage.alt_text || `${product.name} - vista alternativa`}
+                  fill
+                  className="object-cover opacity-0 scale-105 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-100"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                />
+              )}
+            </>
           ) : (
             <div className="flex h-full items-center justify-center text-label-caps">
               NESSUNA IMMAGINE

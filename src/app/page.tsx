@@ -19,7 +19,7 @@ async function getFeaturedProducts() {
       is_featured,
       category:categories(name, slug),
       variants:product_variants(id, price, compare_at_price),
-      images:product_images(url, alt_text)
+      images:product_images(url, alt_text, sort_order)
     `)
     .eq('is_active', true)
     .eq('is_featured', true)
