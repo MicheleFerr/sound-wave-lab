@@ -35,78 +35,78 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = highestComparePrice > lowestPrice
 
   return (
-    <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300">
+    <Card className="group overflow-hidden offwhite-card hover:shadow-none transition-all duration-200">
       <Link href={`/products/${product.slug}`}>
-        <div className="relative aspect-square overflow-hidden bg-muted">
+        <div className="relative aspect-square overflow-hidden bg-white border-b border-offwhite-black">
           {primaryImage ? (
             <Image
               src={primaryImage.url}
               alt={primaryImage.alt_text || product.name}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground">
-              No image
+            <div className="flex h-full items-center justify-center offwhite-label">
+              NO IMAGE
             </div>
           )}
 
-          {/* Badges */}
-          <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {/* Badges - Off-White Style */}
+          <div className="absolute top-3 left-3 flex flex-col gap-2">
             {product.is_featured && (
-              <Badge className="bg-primary text-primary-foreground">
-                In evidenza
-              </Badge>
+              <div className="offwhite-quote bg-white px-3 py-1.5 border border-offwhite-black">
+                <span className="offwhite-label text-[10px]">FEATURED</span>
+              </div>
             )}
             {hasDiscount && (
-              <Badge variant="destructive">
-                -{Math.round((1 - lowestPrice / highestComparePrice) * 100)}%
-              </Badge>
+              <div className="bg-offwhite-red text-white px-3 py-1.5 border border-offwhite-black">
+                <span className="font-bold text-xs tracking-wider">
+                  -{Math.round((1 - lowestPrice / highestComparePrice) * 100)}%
+                </span>
+              </div>
             )}
           </div>
 
-          {/* Quick add button - always visible with backdrop */}
-          <div className="absolute bottom-2 left-2 right-2 transition-all duration-300 hidden md:block">
-            <Button className="w-full bg-brand-gradient hover:opacity-90 !text-white shadow-lg" size="sm">
-              <ShoppingBag className="h-4 w-4 mr-2" />
-              Aggiungi al carrello
+          {/* Quick add button - Off-White Style */}
+          <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:block">
+            <Button className="offwhite-button-filled w-full py-3 text-xs" size="sm">
+              ADD TO CART
             </Button>
           </div>
         </div>
       </Link>
 
-      <CardContent className="p-3 md:p-4">
+      <CardContent className="p-4 md:p-5 space-y-3">
         {product.category && (
           <Link
             href={`/products?category=${product.category.slug}`}
-            className="text-xs text-muted-foreground hover:text-primary transition-colors"
+            className="offwhite-label text-[10px] hover:underline block"
           >
-            {product.category.name}
+            {product.category.name.toUpperCase()}
           </Link>
         )}
 
         <Link href={`/products/${product.slug}`}>
-          <h3 className="font-medium text-sm md:text-base mt-1 line-clamp-2 hover:text-primary transition-colors">
+          <h3 className="offwhite-title text-xs md:text-sm leading-tight line-clamp-2 hover:underline">
             {product.name}
           </h3>
         </Link>
 
-        <div className="flex items-center gap-2 mt-2">
-          <span className="font-bold text-base md:text-lg">
-            €{lowestPrice.toFixed(2)}
+        <div className="flex items-baseline gap-2 pt-1">
+          <span className="offwhite-price text-sm md:text-base">
+            EUR {lowestPrice.toFixed(2)}
           </span>
           {hasDiscount && (
-            <span className="text-sm text-muted-foreground line-through">
-              €{highestComparePrice.toFixed(2)}
+            <span className="offwhite-price text-xs line-through opacity-50">
+              EUR {highestComparePrice.toFixed(2)}
             </span>
           )}
         </div>
 
-        {/* Mobile add button */}
-        <Button className="w-full mt-3 md:hidden bg-brand-gradient hover:opacity-90 !text-white" size="sm">
-          <ShoppingBag className="h-4 w-4 mr-2" />
-          Aggiungi
+        {/* Mobile add button - Off-White Style */}
+        <Button className="offwhite-button w-full mt-2 md:hidden py-3 text-xs" size="sm">
+          ADD TO CART
         </Button>
       </CardContent>
     </Card>

@@ -131,8 +131,8 @@ export function ProductVariantSelector({
       {/* Size Selector */}
       {sizes.length > 0 && (
         <div className="space-y-3">
-          <Label className="text-sm font-medium">
-            Taglia: <span className="font-normal text-muted-foreground">{selectedSize}</span>
+          <Label className="offwhite-label text-[10px]">
+            SIZE: <span className="font-normal">{selectedSize}</span>
           </Label>
           <div className="flex flex-wrap gap-2">
             {sizes.map((size) => {
@@ -143,12 +143,13 @@ export function ProductVariantSelector({
                   onClick={() => setSelectedSize(size)}
                   disabled={!available}
                   className={cn(
-                    'h-10 min-w-[48px] px-3 rounded-lg border-2 font-medium transition-all',
+                    'h-10 min-w-[48px] px-3 border font-bold transition-all text-xs tracking-wider',
+                    'rounded-sm',
                     selectedSize === size
-                      ? 'border-brand-teal bg-brand-teal text-white'
+                      ? 'border-offwhite-black bg-offwhite-black text-white'
                       : available
-                      ? 'border-muted hover:border-muted-foreground/50 bg-background'
-                      : 'border-muted bg-muted text-muted-foreground line-through cursor-not-allowed'
+                      ? 'border-offwhite-black bg-white hover:bg-offwhite-black hover:text-white'
+                      : 'border-offwhite-black/30 bg-white/50 text-offwhite-black/30 line-through cursor-not-allowed'
                   )}
                 >
                   {size}
@@ -162,8 +163,8 @@ export function ProductVariantSelector({
       {/* Color Selector */}
       {colors.length > 1 && (
         <div className="space-y-3">
-          <Label className="text-sm font-medium">
-            Colore: <span className="font-normal text-muted-foreground">{selectedColor}</span>
+          <Label className="offwhite-label text-[10px]">
+            COLOR: <span className="font-normal">{selectedColor}</span>
           </Label>
           <div className="flex flex-wrap gap-2">
             {colors.map((color) => {
@@ -174,12 +175,13 @@ export function ProductVariantSelector({
                   onClick={() => setSelectedColor(color)}
                   disabled={!available}
                   className={cn(
-                    'h-10 px-4 rounded-lg border-2 font-medium transition-all',
+                    'h-10 px-4 border font-bold transition-all text-xs tracking-wider uppercase',
+                    'rounded-sm',
                     selectedColor === color
-                      ? 'border-brand-teal bg-brand-teal text-white'
+                      ? 'border-offwhite-black bg-offwhite-black text-white'
                       : available
-                      ? 'border-muted hover:border-muted-foreground/50 bg-background'
-                      : 'border-muted bg-muted text-muted-foreground line-through cursor-not-allowed'
+                      ? 'border-offwhite-black bg-white hover:bg-offwhite-black hover:text-white'
+                      : 'border-offwhite-black/30 bg-white/50 text-offwhite-black/30 line-through cursor-not-allowed'
                   )}
                 >
                   {color}
@@ -192,41 +194,41 @@ export function ProductVariantSelector({
 
       {/* Stock Status */}
       {selectedVariant && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pt-2">
           <div
             className={cn(
-              'w-2 h-2 rounded-full',
-              isInStock ? 'bg-green-500' : 'bg-red-500'
+              'w-2 h-2 border',
+              isInStock ? 'bg-offwhite-black border-offwhite-black' : 'bg-offwhite-red border-offwhite-red'
             )}
           />
-          <span className="text-sm text-muted-foreground">
+          <span className="offwhite-label text-[9px]">
             {isInStock
               ? selectedVariant.stock_quantity <= 5
-                ? `Solo ${selectedVariant.stock_quantity} disponibili`
-                : 'Disponibile'
-              : 'Esaurito'}
+                ? `ONLY ${selectedVariant.stock_quantity} LEFT`
+                : 'IN STOCK'
+              : 'SOLD OUT'}
           </span>
         </div>
       )}
 
       {/* Quantity & Add to Cart */}
-      <div className="flex gap-4">
+      <div className="flex gap-4 pt-2">
         {/* Quantity Selector */}
-        <div className="flex items-center border rounded-lg">
+        <div className="flex items-center border border-offwhite-black rounded-sm">
           <Button
             variant="ghost"
             size="icon"
-            className="h-12 w-12 rounded-r-none"
+            className="h-12 w-12 rounded-none hover:bg-offwhite-black hover:text-white"
             onClick={() => handleQuantityChange(-1)}
             disabled={quantity <= 1}
           >
             <Minus className="h-4 w-4" />
           </Button>
-          <span className="w-12 text-center font-medium">{quantity}</span>
+          <span className="w-12 text-center font-mono font-bold text-sm">{String(quantity).padStart(2, '0')}</span>
           <Button
             variant="ghost"
             size="icon"
-            className="h-12 w-12 rounded-l-none"
+            className="h-12 w-12 rounded-none hover:bg-offwhite-black hover:text-white"
             onClick={() => handleQuantityChange(1)}
             disabled={quantity >= maxQuantity}
           >
@@ -234,27 +236,27 @@ export function ProductVariantSelector({
           </Button>
         </div>
 
-        {/* Add to Cart Button */}
+        {/* Add to Cart Button - Off-White Style */}
         <Button
           size="lg"
           className={cn(
-            'flex-1 h-12 text-base font-semibold transition-all !text-white',
+            'flex-1 h-12 text-xs font-bold transition-all duration-200 rounded-sm tracking-wider',
             isAdding
-              ? 'bg-green-500 hover:bg-green-500'
-              : 'bg-brand-gradient bg-brand-gradient-hover'
+              ? 'bg-offwhite-black text-white border-offwhite-black'
+              : 'offwhite-button-filled'
           )}
           onClick={handleAddToCart}
           disabled={!isInStock || isAdding}
         >
           {isAdding ? (
             <>
-              <Check className="mr-2 h-5 w-5" />
-              Aggiunto!
+              <Check className="mr-2 h-4 w-4" />
+              ADDED TO CART
             </>
           ) : (
             <>
-              <ShoppingBag className="mr-2 h-5 w-5" />
-              Aggiungi al carrello
+              <ShoppingBag className="mr-2 h-4 w-4" />
+              ADD TO CART
             </>
           )}
         </Button>

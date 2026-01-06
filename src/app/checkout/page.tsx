@@ -575,26 +575,26 @@ function CheckoutContent() {
                     </div>
                   )}
 
-                  {/* Submit Button */}
+                  {/* Submit Button - minimal design */}
                   <Button
                     type="submit"
-                    className="w-full mt-6 bg-brand-gradient hover:opacity-90 !text-white"
+                    className="w-full mt-6 h-12 text-base font-semibold bg-brand-gradient hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] !text-white shadow-lg rounded-lg transition-all duration-200"
                     size="lg"
                     disabled={loading}
                   >
                     {loading ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                         Elaborazione...
                       </>
                     ) : total === 0 ? (
                       <>
-                        <Check className="mr-2 h-4 w-4" />
+                        <Check className="mr-2 h-5 w-5" />
                         Completa Ordine Gratuito
                       </>
                     ) : (
                       <>
-                        <CreditCard className="mr-2 h-4 w-4" />
+                        <CreditCard className="mr-2 h-5 w-5" />
                         Paga €{total.toFixed(2)}
                       </>
                     )}

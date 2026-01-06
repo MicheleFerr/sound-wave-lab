@@ -124,64 +124,84 @@
   }
 }
 
-/* Brand Colors: Sound Wave Lab */
+/* Off-White Inspired Brand Colors */
 :root {
-  --brand-teal: #14595E;
-  --brand-teal-light: #1a7078;
-  --brand-teal-dark: #0f4448;
-  --brand-gold: #FFB753;
-  --brand-gold-light: #ffc36d;
-  --brand-gold-dark: #e5a347;
+  /* Core Off-White Palette */
+  --offwhite-pure: #FFFFFF;
+  --offwhite-black: #000000;
+  --offwhite-accent-red: #FF0000;
+  --offwhite-accent-yellow: #FFFF00;
+  --offwhite-grey: #F5F5F5;
+  --offwhite-grey-dark: #E0E0E0;
+
+  /* Legacy compatibility (manteniamo per non rompere nulla) */
+  --brand-teal: #000000;
+  --brand-teal-light: #333333;
+  --brand-teal-dark: #000000;
+  --brand-gold: #FFFF00;
+  --brand-gold-light: #FFFF33;
+  --brand-gold-dark: #CCCC00;
 }
 
-/* Brand gradient utilities */
+/* Off-White Brand Utilities */
 .bg-brand-gradient {
-  background: linear-gradient(to right, var(--brand-teal), var(--brand-gold));
+  background: var(--offwhite-black);
 }
 
 .bg-brand-gradient-hover:hover {
-  background: linear-gradient(to right, var(--brand-teal-dark), var(--brand-gold-dark));
+  background: var(--offwhite-black);
+  opacity: 0.9;
 }
 
 .text-brand-gradient {
-  background: linear-gradient(to right, var(--brand-teal), var(--brand-gold));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--offwhite-black);
 }
 
 .border-brand-gradient {
-  border-image: linear-gradient(to right, var(--brand-teal), var(--brand-gold)) 1;
+  border-color: var(--offwhite-black);
 }
 
-/* Brand color utilities */
-.text-brand-teal { color: #14595E; }
-.text-brand-teal-light { color: #1a7078; }
-.text-brand-gold { color: #FFB753; }
-.bg-brand-teal { background-color: #14595E; }
-.bg-brand-teal\/10 { background-color: rgba(20, 89, 94, 0.1); }
-.bg-brand-teal\/20 { background-color: rgba(20, 89, 94, 0.2); }
-.bg-brand-teal\/30 { background-color: rgba(20, 89, 94, 0.3); }
-.bg-brand-gold { background-color: #FFB753; }
-.bg-brand-gold\/10 { background-color: rgba(255, 183, 83, 0.1); }
-.bg-brand-gold\/20 { background-color: rgba(255, 183, 83, 0.2); }
-.border-brand-teal { border-color: #14595E; }
-.border-brand-teal\/30 { border-color: rgba(20, 89, 94, 0.3); }
-.ring-brand-teal { --tw-ring-color: #14595E; }
-.ring-brand-teal\/30 { --tw-ring-color: rgba(20, 89, 94, 0.3); }
+/* Off-White Color Utilities */
+.text-offwhite-black { color: #000000; }
+.text-offwhite-red { color: #FF0000; }
+.text-offwhite-yellow { color: #FFFF00; }
+.bg-offwhite-pure { background-color: #FFFFFF; }
+.bg-offwhite-grey { background-color: #F5F5F5; }
+.bg-offwhite-black { background-color: #000000; }
+.bg-offwhite-red { background-color: #FF0000; }
+.bg-offwhite-yellow { background-color: #FFFF00; }
+.border-offwhite-black { border-color: #000000; }
+.border-offwhite-red { border-color: #FF0000; }
+.ring-offwhite-black { --tw-ring-color: #000000; }
 
-/* Brand gradient backgrounds */
+/* Brand color utilities (legacy compatibility) */
+.text-brand-teal { color: #000000; }
+.text-brand-teal-light { color: #333333; }
+.text-brand-gold { color: #FFFF00; }
+.bg-brand-teal { background-color: #000000; }
+.bg-brand-teal\/10 { background-color: rgba(0, 0, 0, 0.1); }
+.bg-brand-teal\/20 { background-color: rgba(0, 0, 0, 0.2); }
+.bg-brand-teal\/30 { background-color: rgba(0, 0, 0, 0.3); }
+.bg-brand-gold { background-color: #FFFF00; }
+.bg-brand-gold\/10 { background-color: rgba(255, 255, 0, 0.1); }
+.bg-brand-gold\/20 { background-color: rgba(255, 255, 0, 0.2); }
+.border-brand-teal { border-color: #000000; }
+.border-brand-teal\/30 { border-color: rgba(0, 0, 0, 0.3); }
+.ring-brand-teal { --tw-ring-color: #000000; }
+.ring-brand-teal\/30 { --tw-ring-color: rgba(0, 0, 0, 0.3); }
+
+/* Off-White Backgrounds (minimal gradients) */
 .bg-brand-gradient-subtle {
-  background: linear-gradient(to bottom right, rgba(20, 89, 94, 0.05), rgba(255, 183, 83, 0.05));
+  background: #FAFAFA;
 }
 .bg-brand-gradient-light {
-  background: linear-gradient(to bottom right, rgba(20, 89, 94, 0.1), rgba(255, 183, 83, 0.1));
+  background: #F5F5F5;
 }
 .bg-brand-gradient-medium {
-  background: linear-gradient(to bottom right, rgba(20, 89, 94, 0.2), rgba(255, 183, 83, 0.2));
+  background: #F0F0F0;
 }
 .bg-brand-gradient-strong {
-  background: linear-gradient(to bottom right, rgba(20, 89, 94, 0.3), rgba(255, 183, 83, 0.3));
+  background: #E8E8E8;
 }
 
 /* Container configuration */
@@ -215,4 +235,118 @@
   .container {
     max-width: 1280px;
   }
+}
+
+/* Off-White Typography & Style System */
+.offwhite-title {
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #000000;
+}
+
+.offwhite-label {
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: #000000;
+}
+
+.offwhite-quote {
+  position: relative;
+}
+
+.offwhite-quote::before {
+  content: '"';
+  position: absolute;
+  left: -0.5em;
+  color: #000000;
+}
+
+.offwhite-quote::after {
+  content: '"';
+  position: absolute;
+  right: -0.5em;
+  color: #000000;
+}
+
+.offwhite-border {
+  border: 1px solid #000000;
+  border-radius: 2px;
+}
+
+.offwhite-border-thick {
+  border: 2px solid #000000;
+  border-radius: 2px;
+}
+
+.offwhite-card {
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.offwhite-button {
+  background: transparent;
+  border: 1px solid #000000;
+  color: #000000;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 2rem;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.offwhite-button:hover {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.offwhite-button-filled {
+  background: #000000;
+  border: 1px solid #000000;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 2rem;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.offwhite-button-filled:hover {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.offwhite-price {
+  font-family: ui-monospace, monospace;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* Off-White Stripe Pattern */
+.offwhite-stripes {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #000000 10px,
+    #000000 12px
+  );
+  opacity: 0.1;
+}
+
+.offwhite-stripes-yellow {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #FFFF00 10px,
+    #FFFF00 12px
+  );
+  opacity: 0.3;
 }

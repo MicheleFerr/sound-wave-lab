@@ -69,13 +69,13 @@ export default async function Home() {
                 Qualità premium, spedizione gratuita.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button size="lg" asChild className="text-base bg-brand-gradient bg-brand-gradient-hover border-0 !text-white">
+                <Button size="lg" asChild className="text-base font-semibold bg-brand-gradient hover:opacity-90 hover:scale-[1.01] active:scale-[0.99] border-0 !text-white shadow-lg rounded-lg px-6 transition-all duration-200">
                   <Link href="/products">
                     Esplora il catalogo
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="secondary" asChild className="text-base bg-white/10 backdrop-blur-sm text-white border border-white/30 hover:bg-white/20">
+                <Button size="lg" variant="secondary" asChild className="text-base font-medium bg-white/10 backdrop-blur-sm text-white border border-white/30 hover:bg-white/20 hover:scale-[1.01] active:scale-[0.99] rounded-lg px-6 transition-all duration-200">
                   <Link href="/products">
                     Novità
                   </Link>

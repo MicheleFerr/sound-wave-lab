@@ -22,27 +22,28 @@ export function CartDrawer() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
-      <SheetContent className="flex flex-col w-full sm:max-w-lg px-4 sm:px-6">
-        <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <ShoppingBag className="h-5 w-5" />
-            Carrello ({totalItems()} articoli)
+      <SheetContent className="flex flex-col w-full sm:max-w-lg px-4 sm:px-6 border-l-2 border-offwhite-black">
+        <SheetHeader className="border-b border-offwhite-black pb-4">
+          <SheetTitle className="offwhite-title text-sm tracking-widest">
+            SHOPPING BAG ({String(totalItems()).padStart(2, '0')} ITEMS)
           </SheetTitle>
         </SheetHeader>
 
         {items.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center">
-            <ShoppingBag className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground mb-4">Il tuo carrello e vuoto</p>
-            <Button asChild onClick={closeCart}>
-              <Link href="/products">Esplora il catalogo</Link>
+          <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
+            <div className="border-2 border-offwhite-black p-6 rounded-sm">
+              <ShoppingBag className="h-12 w-12" strokeWidth={1.5} />
+            </div>
+            <p className="offwhite-label text-xs">YOUR CART IS EMPTY</p>
+            <Button asChild onClick={closeCart} className="offwhite-button-filled px-8 py-3">
+              <Link href="/products">EXPLORE PRODUCTS</Link>
             </Button>
           </div>
         ) : (
           <>
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto -mx-4 sm:-mx-6 px-4 sm:px-6">
-              <div className="divide-y">
+              <div className="divide-y divide-offwhite-black/20">
                 {items.map((item) => (
                   <CartItem key={item.variantId} item={item} />
                 ))}
@@ -50,36 +51,35 @@ export function CartDrawer() {
             </div>
 
             {/* Summary */}
-            <div className="pt-4 space-y-4">
-              <Separator />
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotale</span>
-                  <span>{'\u20AC'}{sub.toFixed(2)}</span>
+            <div className="py-6 space-y-4 border-t-2 border-offwhite-black">
+              <div className="space-y-3">
+                <div className="flex justify-between offwhite-label text-[10px]">
+                  <span>SUBTOTAL</span>
+                  <span className="offwhite-price">EUR {sub.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Spedizione</span>
-                  <span>
+                <div className="flex justify-between offwhite-label text-[10px]">
+                  <span>SHIPPING</span>
+                  <span className="offwhite-price">
                     {shippingCost === 0 ? (
-                      <span className="text-green-600">Gratis</span>
+                      <span>FREE</span>
                     ) : (
-                      `\u20AC${shippingCost.toFixed(2)}`
+                      `EUR ${shippingCost.toFixed(2)}`
                     )}
                   </span>
                 </div>
                 {sub < 50 && sub > 0 && (
-                  <p className="text-xs text-muted-foreground">
-                    Aggiungi {'\u20AC'}{(50 - sub).toFixed(2)} per la spedizione gratuita
+                  <p className="text-[9px] tracking-wide uppercase pt-1 opacity-60">
+                    Add EUR {(50 - sub).toFixed(2)} for free shipping
                   </p>
                 )}
               </div>
-              <Separator />
-              <div className="flex justify-between font-medium text-lg">
-                <span>Totale</span>
-                <span>{'\u20AC'}{total.toFixed(2)}</span>
+              <Separator className="bg-offwhite-black/20" />
+              <div className="flex justify-between offwhite-title text-sm pt-2">
+                <span>TOTAL</span>
+                <span className="offwhite-price">EUR {total.toFixed(2)}</span>
               </div>
-              <Button asChild className="w-full h-12" onClick={closeCart}>
-                <Link href="/checkout">Vai al checkout</Link>
+              <Button asChild className="offwhite-button-filled w-full h-12 text-xs mt-4" onClick={closeCart}>
+                <Link href="/checkout">PROCEED TO CHECKOUT</Link>
               </Button>
             </div>
           </>
