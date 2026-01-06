@@ -24,6 +24,7 @@ export function CategoryCard({ category, index, isFeatured = false }: CategoryCa
     <Link
       href={`/products?category=${category.slug}`}
       className={`
+        block w-full
         group relative overflow-hidden
         border-2 border-pure-black
         bg-white

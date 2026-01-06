@@ -36,11 +36,11 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
 
   return (
     <div className="w-full overflow-hidden">
-      {/* Desktop Layout: Asymmetric 1+3 grid */}
+      {/* Desktop Layout: Asymmetric 1+3 grid (60% / 40%) */}
       <div className="hidden md:flex gap-4">
-        {/* Large featured card - left side */}
+        {/* Large featured card - left side (60%) */}
         {categories[0] && (
-          <div className="w-1/2">
+          <div className="w-[60%]">
             <CategoryCard
               category={categories[0]}
               index={0}
@@ -49,8 +49,8 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
           </div>
         )}
 
-        {/* 3 smaller cards stacked on the right */}
-        <div className="w-1/2 flex flex-col gap-4">
+        {/* 3 smaller cards stacked on the right (40%) */}
+        <div className="w-[40%] flex flex-col gap-4">
           {categories.slice(1, 4).map((category, idx) => (
             <CategoryCard
               key={category.id}
