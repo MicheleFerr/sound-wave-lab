@@ -35,7 +35,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const hasDiscount = highestComparePrice > lowestPrice
 
   return (
-    <Card className="group overflow-hidden border-0 shadow-none hover:shadow-none transition-all duration-200 bg-transparent">
+    <Card className="group overflow-hidden border-0 dark:border dark:border-white/20 shadow-none hover:shadow-none transition-all duration-200 bg-transparent !p-0 !gap-0 rounded-none">
       <Link href={`/products/${product.slug}`}>
         <div className="relative aspect-square overflow-hidden bg-neutral-grey">
           {primaryImage ? (
@@ -72,28 +72,28 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </Link>
 
-      <CardContent className="p-4 md:p-5 space-y-3 bg-transparent">
+      <CardContent className="p-4 md:p-5 space-y-2 bg-transparent !px-0">
         {product.category && (
           <Link
             href={`/products?category=${product.category.slug}`}
-            className="text-label-caps text-[10px] hover:underline block"
+            className="text-label-caps text-[10px] hover:underline block dark:text-white/60"
           >
             {product.category.name.toUpperCase()}
           </Link>
         )}
 
         <Link href={`/products/${product.slug}`}>
-          <h3 className="text-heading-minimal text-xs md:text-sm leading-tight line-clamp-2 hover:underline">
+          <h3 className="text-heading-minimal text-xs md:text-sm leading-tight line-clamp-2 hover:underline dark:text-white">
             {product.name}
           </h3>
         </Link>
 
-        <div className="flex items-baseline gap-2 pt-1">
-          <span className="text-price-mono text-sm md:text-base">
+        <div className="flex items-baseline gap-2">
+          <span className="text-price-mono text-sm md:text-base dark:text-white">
             €{lowestPrice.toFixed(2)}
           </span>
           {hasDiscount && (
-            <span className="text-price-mono text-xs line-through opacity-50">
+            <span className="text-price-mono text-xs line-through opacity-50 dark:text-white/50">
               €{highestComparePrice.toFixed(2)}
             </span>
           )}
@@ -101,7 +101,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Featured/Stock Status */}
         {product.is_featured && (
-          <p className="text-label-caps text-[9px] mt-1 tracking-wide opacity-60">
+          <p className="text-label-caps text-[9px] tracking-wide opacity-60 dark:text-white/60">
             TORNATO DISPONIBILE
           </p>
         )}

@@ -23,6 +23,7 @@ async function getHeaderSettings() {
 
   const navLinks: NavLink[] = []
   let announcement = ''
+  let darkModeEnabled = true // Default to true if setting doesn't exist
 
   settings?.forEach(setting => {
     if (setting.key === 'header_nav_links' && Array.isArray(setting.value)) {
@@ -30,6 +31,9 @@ async function getHeaderSettings() {
     }
     if (setting.key === 'header_announcement' && typeof setting.value === 'string') {
       announcement = setting.value
+    }
+    if (setting.key === 'header_dark_mode_enabled') {
+      darkModeEnabled = Boolean(setting.value)
     }
   })
 
@@ -42,7 +46,7 @@ async function getHeaderSettings() {
     )
   }
 
-  return { navLinks, announcement }
+  return { navLinks, announcement, darkModeEnabled }
 }
 
 export async function Header() {
@@ -62,7 +66,7 @@ export async function Header() {
     profile = data
   }
 
-  const { navLinks, announcement } = headerSettings
+  const { navLinks, announcement, darkModeEnabled } = headerSettings
 
   return (
     <>
@@ -107,7 +111,7 @@ export async function Header() {
               <Search className="h-5 w-5" />
             </Link>
           </Button>
-          <ThemeToggle />
+          {darkModeEnabled && <ThemeToggle />}
           <CartIcon />
           <UserMenu
             user={user ? {

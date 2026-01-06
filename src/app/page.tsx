@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { ArrowRight, Headphones, Music, Radio } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
-import { ProductGrid } from '@/components/products'
+import { FeaturedProductsSlider } from '@/components/products'
 
 async function getFeaturedProducts() {
   const supabase = await createClient()
@@ -24,7 +24,7 @@ async function getFeaturedProducts() {
     .eq('is_active', true)
     .eq('is_featured', true)
     .order('created_at', { ascending: false })
-    .limit(4)
+    .limit(12)
 
   return products || []
 }
@@ -151,27 +151,27 @@ export default async function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-12 md:py-16 bg-zinc-50 dark:bg-zinc-900">
+      <section className="py-12 md:py-16 bg-white dark:bg-zinc-900">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8 md:mb-12">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold">Prodotti in evidenza</h2>
-              <p className="text-muted-foreground mt-2">I nostri best seller</p>
+              <h2 className="text-heading-minimal text-xl md:text-2xl tracking-wider">PRODOTTI IN EVIDENZA</h2>
+              <p className="text-label-caps text-[10px] mt-2 opacity-60">TORNATI DISPONIBILI</p>
             </div>
-            <Button variant="ghost" asChild className="hidden md:flex">
+            <Button variant="ghost" asChild className="hidden md:flex btn-outline text-[10px] py-2 px-4">
               <Link href="/products">
-                Vedi tutti
-                <ArrowRight className="ml-2 h-4 w-4" />
+                VEDI TUTTI
+                <ArrowRight className="ml-2 h-3 w-3" />
               </Link>
             </Button>
           </div>
 
-          <ProductGrid products={featuredProducts} columns={4} />
+          <FeaturedProductsSlider products={featuredProducts} />
 
           <div className="mt-8 text-center md:hidden">
-            <Button asChild>
+            <Button asChild className="btn-filled text-xs">
               <Link href="/products">
-                Vedi tutti i prodotti
+                VEDI TUTTI I PRODOTTI
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>

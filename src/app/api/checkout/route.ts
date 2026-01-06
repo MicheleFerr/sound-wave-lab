@@ -1,7 +1,12 @@
 // src/app/api/checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe/server'
 import { createClient } from '@/lib/supabase/server'
+
+// Lazy load stripe only when needed (for paid orders)
+const getStripe = async () => {
+  const { stripe } = await import('@/lib/stripe/server')
+  return stripe
+}
 
 interface CartItem {
   variantId: string
@@ -169,6 +174,8 @@ export async function POST(request: NextRequest) {
     }
 
     // For PAID orders, create Stripe Checkout Session
+    const stripe = await getStripe()
+
     const lineItems: any[] = items.map((item) => ({
       price_data: {
         currency: 'eur',

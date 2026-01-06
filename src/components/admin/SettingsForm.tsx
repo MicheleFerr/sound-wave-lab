@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Save, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -22,7 +23,7 @@ interface SettingsFormProps {
 }
 
 // Field configurations for each setting key
-const fieldConfigs: Record<string, { label: string; description?: string; type?: 'text' | 'textarea' | 'number' | 'email' | 'tel' }> = {
+const fieldConfigs: Record<string, { label: string; description?: string; type?: 'text' | 'textarea' | 'number' | 'email' | 'tel' | 'checkbox' }> = {
   // Homepage
   hero_title: { label: 'Titolo Hero (prima riga)', description: 'Es: "Indossa la tua"' },
   hero_subtitle: { label: 'Titolo Hero (seconda riga)', description: 'Es: "passione"' },
@@ -75,12 +76,19 @@ const fieldConfigs: Record<string, { label: string; description?: string; type?:
   header_nav_3_text: { label: 'Link 3 - Testo' },
   header_nav_3_url: { label: 'Link 3 - URL', description: 'Es: /chi-siamo' },
   header_announcement: { label: 'Banner Annuncio', description: 'Testo mostrato sopra l\'header (lascia vuoto per nascondere)' },
+  header_dark_mode_enabled: { label: 'Abilita Dark Mode Toggle', type: 'checkbox', description: 'Mostra il pulsante sole/luna per cambiare tema' },
 }
 
 // Extract simple value from setting
-function extractValue(setting: Setting): Record<string, string> {
+function extractValue(setting: Setting): Record<string, string | boolean> {
   const value = setting.value
-  const result: Record<string, string> = {}
+  const result: Record<string, string | boolean> = {}
+
+  // Handle boolean settings (checkboxes)
+  if (setting.key === 'header_dark_mode_enabled') {
+    result[setting.key] = Boolean(value)
+    return result
+  }
 
   // Handle CTA buttons - extract just the text
   if (setting.key === 'hero_cta_primary' || setting.key === 'hero_cta_secondary') {
@@ -200,6 +208,11 @@ function reconstructValue(setting: Setting, formValues: Record<string, string>):
     return links
   }
 
+  // Boolean values (checkboxes)
+  if (setting.key === 'header_dark_mode_enabled') {
+    return formValues[setting.key] === 'true' || formValues[setting.key] === true
+  }
+
   // Numbers
   if (setting.key === 'store_free_shipping_threshold' || setting.key === 'store_shipping_cost') {
     return parseFloat(formValues[setting.key]) || 0
@@ -211,8 +224,8 @@ function reconstructValue(setting: Setting, formValues: Record<string, string>):
 
 export function SettingsForm({ settings, category }: SettingsFormProps) {
   // Extract all form values from settings
-  const [values, setValues] = useState<Record<string, string>>(() => {
-    const initial: Record<string, string> = {}
+  const [values, setValues] = useState<Record<string, string | boolean>>(() => {
+    const initial: Record<string, string | boolean> = {}
     settings.forEach(setting => {
       const extracted = extractValue(setting)
       Object.assign(initial, extracted)
@@ -222,7 +235,7 @@ export function SettingsForm({ settings, category }: SettingsFormProps) {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
-  const handleChange = (key: string, value: string) => {
+  const handleChange = (key: string, value: string | boolean) => {
     setValues(prev => ({ ...prev, [key]: value }))
     setMessage(null)
   }
@@ -322,25 +335,43 @@ export function SettingsForm({ settings, category }: SettingsFormProps) {
 
       return (
         <div key={key} className="space-y-2">
-          <Label htmlFor={key}>{config.label}</Label>
-          {config.type === 'textarea' ? (
-            <Textarea
-              id={key}
-              value={value}
-              onChange={(e) => handleChange(key, e.target.value)}
-              rows={3}
-            />
+          {config.type === 'checkbox' ? (
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id={key}
+                checked={Boolean(value)}
+                onCheckedChange={(checked) => handleChange(key, checked)}
+              />
+              <div className="space-y-1">
+                <Label htmlFor={key} className="font-normal cursor-pointer">{config.label}</Label>
+                {config.description && (
+                  <p className="text-xs text-muted-foreground">{config.description}</p>
+                )}
+              </div>
+            </div>
           ) : (
-            <Input
-              id={key}
-              type={config.type || 'text'}
-              value={value}
-              onChange={(e) => handleChange(key, e.target.value)}
-              step={config.type === 'number' ? '0.01' : undefined}
-            />
-          )}
-          {config.description && (
-            <p className="text-xs text-muted-foreground">{config.description}</p>
+            <>
+              <Label htmlFor={key}>{config.label}</Label>
+              {config.type === 'textarea' ? (
+                <Textarea
+                  id={key}
+                  value={String(value)}
+                  onChange={(e) => handleChange(key, e.target.value)}
+                  rows={3}
+                />
+              ) : (
+                <Input
+                  id={key}
+                  type={config.type || 'text'}
+                  value={String(value)}
+                  onChange={(e) => handleChange(key, e.target.value)}
+                  step={config.type === 'number' ? '0.01' : undefined}
+                />
+              )}
+              {config.description && (
+                <p className="text-xs text-muted-foreground">{config.description}</p>
+              )}
+            </>
           )}
         </div>
       )

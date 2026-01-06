@@ -251,12 +251,12 @@ export function ProductVariantSelector({
           {isAdding ? (
             <>
               <Check className="mr-2 h-4 w-4" />
-              ADDED TO CART
+              AGGIUNTO AL CARRELLO
             </>
           ) : (
             <>
               <ShoppingBag className="mr-2 h-4 w-4" />
-              ADD TO CART
+              AGGIUNGI AL CARRELLO
             </>
           )}
         </Button>
