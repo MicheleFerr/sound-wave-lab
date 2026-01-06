@@ -27,9 +27,41 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // For now, just refresh the session
-  // TODO: Add proper admin authentication
-  await supabase.auth.getUser()
+  // Refresh the session
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Protect admin routes at middleware level for early rejection
+  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
+
+  if (isAdminRoute) {
+    if (!user) {
+      // Redirect unauthenticated users to login
+      const loginUrl = new URL('/login', request.url)
+      loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
+      return NextResponse.redirect(loginUrl)
+    }
+
+    // Check admin role
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.role !== 'admin') {
+      // Redirect non-admin users to home
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+  }
+
+  // Protect account routes - require authentication
+  const isAccountRoute = request.nextUrl.pathname.startsWith('/account')
+
+  if (isAccountRoute && !user) {
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
+    return NextResponse.redirect(loginUrl)
+  }
 
   return supabaseResponse
 }

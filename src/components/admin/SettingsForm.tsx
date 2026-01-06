@@ -311,7 +311,7 @@ export function SettingsForm({ settings, category }: SettingsFormProps) {
               <Label htmlFor={titleKey}>Titolo</Label>
               <Input
                 id={titleKey}
-                value={values[titleKey] || ''}
+                value={String(values[titleKey] ?? '')}
                 onChange={(e) => handleChange(titleKey, e.target.value)}
               />
             </div>
@@ -319,7 +319,7 @@ export function SettingsForm({ settings, category }: SettingsFormProps) {
               <Label htmlFor={contentKey}>Contenuto</Label>
               <Textarea
                 id={contentKey}
-                value={values[contentKey] || ''}
+                value={String(values[contentKey] ?? '')}
                 onChange={(e) => handleChange(contentKey, e.target.value)}
                 rows={4}
               />

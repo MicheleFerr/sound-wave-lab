@@ -1,6 +1,8 @@
 // src/app/admin/layout.tsx
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { LayoutDashboard, Package, FolderOpen, ShoppingCart, Settings, ArrowLeft, Tag, Palette } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
 
 const adminNav = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -12,11 +14,29 @@ const adminNav = [
   { label: 'Impostazioni', href: '/admin/settings', icon: Settings },
 ]
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Security: Verify user is authenticated and has admin role
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect('/login')
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile?.role !== 'admin') {
+    redirect('/')
+  }
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       {/* Admin Header */}
