@@ -131,19 +131,6 @@ export async function POST(request: NextRequest) {
       return orderData
     }
 
-    // Update coupon usage count if coupon was used
-    const updateCouponUsage = async () => {
-      if (coupon?.id) {
-        await supabase.rpc('increment_coupon_usage', { coupon_id: coupon.id }).catch(() => {
-          // If RPC doesn't exist, do manual update
-          supabase
-            .from('coupons')
-            .update({ current_uses: supabase.rpc('current_uses + 1') })
-            .eq('id', coupon.id)
-        })
-      }
-    }
-
     // Handle FREE orders (100% discount)
     if (isFreeOrder) {
       // Create order directly as paid

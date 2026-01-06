@@ -124,17 +124,17 @@
   }
 }
 
-/* Off-White Inspired Brand Colors */
+/* Minimal Design System - Brand Colors */
 :root {
-  /* Core Off-White Palette */
-  --offwhite-pure: #FFFFFF;
-  --offwhite-black: #000000;
-  --offwhite-accent-red: #FF0000;
-  --offwhite-accent-yellow: #FFFF00;
-  --offwhite-grey: #F5F5F5;
-  --offwhite-grey-dark: #E0E0E0;
+  /* Core Minimal Palette */
+  --pure-white: #FFFFFF;
+  --pure-black: #000000;
+  --accent-red: #FF0000;
+  --accent-yellow: #FFFF00;
+  --neutral-grey: #F5F5F5;
+  --neutral-grey-dark: #E0E0E0;
 
-  /* Legacy compatibility (manteniamo per non rompere nulla) */
+  /* Legacy compatibility */
   --brand-teal: #000000;
   --brand-teal-light: #333333;
   --brand-teal-dark: #000000;
@@ -143,36 +143,36 @@
   --brand-gold-dark: #CCCC00;
 }
 
-/* Off-White Brand Utilities */
+/* Minimal Brand Utilities */
 .bg-brand-gradient {
-  background: var(--offwhite-black);
+  background: var(--pure-black);
 }
 
 .bg-brand-gradient-hover:hover {
-  background: var(--offwhite-black);
+  background: var(--pure-black);
   opacity: 0.9;
 }
 
 .text-brand-gradient {
-  color: var(--offwhite-black);
+  color: var(--pure-black);
 }
 
 .border-brand-gradient {
-  border-color: var(--offwhite-black);
+  border-color: var(--pure-black);
 }
 
-/* Off-White Color Utilities */
-.text-offwhite-black { color: #000000; }
-.text-offwhite-red { color: #FF0000; }
-.text-offwhite-yellow { color: #FFFF00; }
-.bg-offwhite-pure { background-color: #FFFFFF; }
-.bg-offwhite-grey { background-color: #F5F5F5; }
-.bg-offwhite-black { background-color: #000000; }
-.bg-offwhite-red { background-color: #FF0000; }
-.bg-offwhite-yellow { background-color: #FFFF00; }
-.border-offwhite-black { border-color: #000000; }
-.border-offwhite-red { border-color: #FF0000; }
-.ring-offwhite-black { --tw-ring-color: #000000; }
+/* Minimal Color Utilities */
+.text-pure-black { color: #000000; }
+.text-accent-red { color: #FF0000; }
+.text-accent-yellow { color: #FFFF00; }
+.bg-pure-white { background-color: #FFFFFF; }
+.bg-neutral-grey { background-color: #F5F5F5; }
+.bg-pure-black { background-color: #000000; }
+.bg-accent-red { background-color: #FF0000; }
+.bg-accent-yellow { background-color: #FFFF00; }
+.border-pure-black { border-color: #000000; }
+.border-accent-red { border-color: #FF0000; }
+.ring-pure-black { --tw-ring-color: #000000; }
 
 /* Brand color utilities (legacy compatibility) */
 .text-brand-teal { color: #000000; }
@@ -237,15 +237,15 @@
   }
 }
 
-/* Off-White Typography & Style System */
-.offwhite-title {
+/* Minimal Typography & Style System */
+.text-heading-minimal {
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 0.1em;
   color: #000000;
 }
 
-.offwhite-label {
+.text-label-caps {
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -253,42 +253,42 @@
   color: #000000;
 }
 
-.offwhite-quote {
+.text-quoted {
   position: relative;
 }
 
-.offwhite-quote::before {
+.text-quoted::before {
   content: '"';
   position: absolute;
   left: -0.5em;
   color: #000000;
 }
 
-.offwhite-quote::after {
+.text-quoted::after {
   content: '"';
   position: absolute;
   right: -0.5em;
   color: #000000;
 }
 
-.offwhite-border {
+.border-minimal {
   border: 1px solid #000000;
   border-radius: 2px;
 }
 
-.offwhite-border-thick {
+.border-minimal-thick {
   border: 2px solid #000000;
   border-radius: 2px;
 }
 
-.offwhite-card {
+.card-minimal {
   background: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 2px;
   box-shadow: none;
 }
 
-.offwhite-button {
+.btn-outline {
   background: transparent;
   border: 1px solid #000000;
   color: #000000;
@@ -300,12 +300,12 @@
   transition: all 0.2s;
 }
 
-.offwhite-button:hover {
+.btn-outline:hover {
   background: #000000;
   color: #FFFFFF;
 }
 
-.offwhite-button-filled {
+.btn-filled {
   background: #000000;
   border: 1px solid #000000;
   color: #FFFFFF;
@@ -317,19 +317,19 @@
   transition: all 0.2s;
 }
 
-.offwhite-button-filled:hover {
+.btn-filled:hover {
   background: #FFFFFF;
   color: #000000;
 }
 
-.offwhite-price {
+.text-price-mono {
   font-family: ui-monospace, monospace;
   font-weight: 600;
   letter-spacing: 0.05em;
 }
 
-/* Off-White Stripe Pattern */
-.offwhite-stripes {
+/* Decorative Patterns */
+.pattern-stripes {
   background-image: repeating-linear-gradient(
     45deg,
     transparent,
@@ -340,7 +340,7 @@
   opacity: 0.1;
 }
 
-.offwhite-stripes-yellow {
+.pattern-stripes-accent {
   background-image: repeating-linear-gradient(
     45deg,
     transparent,
