@@ -35,24 +35,14 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
   const otherCategories = categories.filter((_, i) => i !== featuredIndex)
 
   return (
-    <div className="w-full">
-      {/* Desktop Layout: 1 large left + 2x2 grid right */}
-      <div className="hidden md:grid md:grid-cols-3 gap-4">
-        {/* Large featured card */}
-        <div className="row-span-2 h-full">
-          <CategoryCard
-            category={categories[0]}
-            index={0}
-            isFeatured
-          />
-        </div>
-
-        {/* 4 smaller cards in 2x2 on the right */}
-        {categories.slice(1, 5).map((category, idx) => (
+    <div className="w-full overflow-hidden">
+      {/* Desktop Layout: Simple 2x2 grid for now */}
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {categories.slice(0, 4).map((category, idx) => (
           <CategoryCard
             key={category.id}
             category={category}
-            index={idx + 1}
+            index={idx}
           />
         ))}
       </div>
