@@ -1,8 +1,13 @@
 // src/app/api/checkout/session/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe/server'
+import { orderRateLimiter, checkRateLimit } from '@/lib/rate-limit'
 
 export async function GET(request: NextRequest) {
+  // SECURITY: Rate limiting check
+  const rateLimitResponse = await checkRateLimit(request, orderRateLimiter)
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const sessionId = request.nextUrl.searchParams.get('session_id')
 

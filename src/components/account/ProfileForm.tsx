@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader2, Save } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { sanitizeInput, sanitizePhone } from '@/lib/validation'
 
 interface ProfileFormProps {
   profile: {
@@ -33,11 +34,12 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     try {
       const supabase = createClient()
 
+      // SECURITY: Sanitize user input before saving
       const { error } = await supabase
         .from('profiles')
         .update({
-          full_name: fullName,
-          phone: phone,
+          full_name: sanitizeInput(fullName),
+          phone: sanitizePhone(phone),
           updated_at: new Date().toISOString(),
         })
         .eq('id', profile.id)

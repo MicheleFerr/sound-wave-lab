@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Loader2, Mail, Lock, User } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { validatePassword, getPasswordStrengthHints } from '@/lib/validation'
 
 export function RegisterForm() {
   const router = useRouter()
@@ -18,6 +19,7 @@ export function RegisterForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [passwordHints, setPasswordHints] = useState<string[]>([])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,9 +33,10 @@ export function RegisterForm() {
       return
     }
 
-    // Validate password length
-    if (password.length < 6) {
-      setError('La password deve essere di almeno 6 caratteri')
+    // SECURITY: Stronger password validation
+    const passwordValidation = validatePassword(password)
+    if (!passwordValidation.valid) {
+      setError(passwordValidation.error || 'Password non valida')
       setLoading(false)
       return
     }
@@ -140,11 +143,27 @@ export function RegisterForm() {
             type="password"
             placeholder="••••••••"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              setPasswordHints(getPasswordStrengthHints(e.target.value))
+            }}
             className="pl-10"
             required
           />
         </div>
+        {password && passwordHints.length > 0 && (
+          <div className="text-xs text-muted-foreground space-y-1">
+            <p className="font-medium">La password deve avere:</p>
+            <ul className="list-disc list-inside">
+              {passwordHints.map((hint, i) => (
+                <li key={i} className="text-amber-600 dark:text-amber-400">{hint}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {password && passwordHints.length === 0 && (
+          <p className="text-xs text-green-600 dark:text-green-400">Password valida</p>
+        )}
       </div>
 
       <div className="space-y-2">

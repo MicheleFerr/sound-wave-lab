@@ -1,13 +1,20 @@
 // src/app/api/orders/[orderNumber]/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { orderRateLimiter, checkRateLimit } from '@/lib/rate-limit'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ orderNumber: string }> }
 ) {
+  // SECURITY: Rate limiting check
+  const rateLimitResponse = await checkRateLimit(request, orderRateLimiter)
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const { orderNumber } = await params
+    const accessToken = request.nextUrl.searchParams.get('token')
+
     const supabase = await createClient()
 
     // Get current user
@@ -26,9 +33,9 @@ export async function GET(
       )
     }
 
-    // Security: Verify ownership or admin role
-    // If order has a user_id, only that user or admin can view it
+    // SECURITY: Verify access based on order ownership
     if (order.user_id) {
+      // Logged-in user's order - verify ownership or admin role
       if (!user) {
         return NextResponse.json(
           { error: 'Autenticazione richiesta' },
@@ -52,11 +59,25 @@ export async function GET(
           )
         }
       }
+    } else {
+      // SECURITY: Guest order - require valid access token to prevent enumeration
+      if (order.access_token) {
+        // Order has an access token, must match
+        if (!accessToken || order.access_token !== accessToken) {
+          return NextResponse.json(
+            { error: 'Token di accesso non valido' },
+            { status: 403 }
+          )
+        }
+      }
+      // Legacy orders without access_token remain accessible (backwards compatibility)
+      // New guest orders will always have an access_token
     }
-    // Note: Guest orders (user_id = null) remain accessible by order number
-    // This is intentional for order confirmation pages
 
-    return NextResponse.json(order)
+    // Remove access_token from response for security
+    const { access_token: _, ...safeOrder } = order
+
+    return NextResponse.json(safeOrder)
   } catch (error) {
     console.error('Error fetching order:', error)
     return NextResponse.json(

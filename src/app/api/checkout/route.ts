@@ -1,7 +1,9 @@
 // src/app/api/checkout/route.ts
 import { NextRequest, NextResponse } from 'next/server'
+import { randomBytes } from 'crypto'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
+import { checkoutRateLimiter, checkRateLimit } from '@/lib/rate-limit'
 
 // Lazy load stripe only when needed (for paid orders)
 const getStripe = async () => {
@@ -51,7 +53,16 @@ function generateOrderNumber(): string {
   return `SWL-${timestamp}-${random}`
 }
 
+// SECURITY: Generate cryptographically secure access token for guest orders
+function generateAccessToken(): string {
+  return randomBytes(32).toString('hex')
+}
+
 export async function POST(request: NextRequest) {
+  // SECURITY: Rate limiting check
+  const rateLimitResponse = await checkRateLimit(request, checkoutRateLimiter)
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const body: CheckoutRequest = await request.json()
     const { items, shippingAddress, email, coupon } = body
@@ -129,8 +140,9 @@ export async function POST(request: NextRequest) {
     const totalCents = Math.max(0, subtotalCents + shippingCost - discountCents)
     const isFreeOrder = totalCents === 0
 
-    // Generate order number
+    // Generate order number and access token for guest orders
     const orderNumber = generateOrderNumber()
+    const accessToken = user ? null : generateAccessToken() // Only for guest orders
 
     // Helper function to create order and order items
     // Uses admin client to bypass RLS for order creation
@@ -138,6 +150,7 @@ export async function POST(request: NextRequest) {
       const { error: orderError } = await supabaseAdmin.from('orders').insert({
         order_number: orderNumber,
         user_id: user?.id || null,
+        access_token: accessToken, // SECURITY: Token for guest order verification
         stripe_session_id: stripeSessionId,
         status,
         subtotal: subtotalCents / 100,
@@ -198,27 +211,19 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      // Update coupon usage - increment current_uses
+      // SECURITY: Update coupon usage atomically to prevent race conditions
       if (coupon?.id) {
-        // First get current value, then increment
-        const { data: currentCoupon } = await supabaseAdmin
-          .from('coupons')
-          .select('current_uses')
-          .eq('id', coupon.id)
-          .single()
-
-        if (currentCoupon) {
-          await supabaseAdmin
-            .from('coupons')
-            .update({ current_uses: (currentCoupon.current_uses || 0) + 1 })
-            .eq('id', coupon.id)
-        }
+        await supabaseAdmin.rpc('increment_coupon_usage', { coupon_id_param: coupon.id })
       }
 
-      // Redirect directly to success page with order number
+      // Redirect directly to success page with order number (and token for guests)
+      const successUrl = accessToken
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?order=${orderNumber}&token=${accessToken}`
+        : `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?order=${orderNumber}`
+
       return NextResponse.json({
         sessionId: null,
-        url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?order=${orderNumber}`,
+        url: successUrl,
         freeOrder: true,
       })
     }
@@ -274,6 +279,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         order_number: orderNumber,
         user_id: user?.id || '',
+        access_token: accessToken || '', // SECURITY: For guest order verification
         coupon_id: coupon?.id || '',
         coupon_code: coupon?.code || '',
         shipping_address: JSON.stringify(shippingAddress),

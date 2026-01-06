@@ -1,6 +1,7 @@
 // src/app/api/coupons/validate/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { couponRateLimiter, checkRateLimit } from '@/lib/rate-limit'
 
 interface ValidateCouponRequest {
   code: string
@@ -22,6 +23,10 @@ interface Coupon {
 }
 
 export async function POST(request: NextRequest) {
+  // SECURITY: Rate limiting check
+  const rateLimitResponse = await checkRateLimit(request, couponRateLimiter)
+  if (rateLimitResponse) return rateLimitResponse
+
   try {
     const body: ValidateCouponRequest = await request.json()
     const { code, subtotal } = body
