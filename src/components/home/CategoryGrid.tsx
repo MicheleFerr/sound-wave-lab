@@ -30,16 +30,16 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
 
   if (categories.length === 0) return null
 
-  // Get the featured category and the rest
+  // Get the featured category and the rest for mobile
   const featuredCategory = categories[featuredIndex]
   const otherCategories = categories.filter((_, i) => i !== featuredIndex)
 
   return (
-    <>
-      {/* Desktop Layout: Asymmetric grid */}
+    <div className="w-full">
+      {/* Desktop Layout: 1 large left + 2x2 grid right */}
       <div className="hidden md:grid md:grid-cols-3 gap-4">
-        {/* Large featured card - spans 2 rows */}
-        <div className="row-span-2">
+        {/* Large featured card */}
+        <div className="row-span-2 h-full">
           <CategoryCard
             category={categories[0]}
             index={0}
@@ -47,28 +47,28 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
           />
         </div>
 
-        {/* Three smaller cards stacked on the right */}
-        <div className="col-span-2 grid grid-cols-2 gap-4">
-          {categories.slice(1, 4).map((category, idx) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
-              index={idx + 1}
-            />
-          ))}
-          {/* If we have exactly 3 other categories, add empty placeholder for balance */}
-          {categories.length === 4 && (
-            <div className="hidden" /> // Grid will auto-balance
-          )}
-        </div>
+        {/* 4 smaller cards in 2x2 on the right */}
+        {categories.slice(1, 5).map((category, idx) => (
+          <CategoryCard
+            key={category.id}
+            category={category}
+            index={idx + 1}
+          />
+        ))}
       </div>
 
-      {/* Mobile Layout: Featured card + 3 small cards with rotation */}
-      <div className="md:hidden space-y-4">
-        {/* Featured card with rotation */}
-        <div className="relative">
-          {/* Rotation indicator dots */}
-          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+      {/* Mobile Layout: 1 large card on top + 3 small below */}
+      <div className="md:hidden flex flex-col gap-4">
+        {/* Featured card - full width, larger aspect ratio */}
+        <div className="w-full relative pb-8">
+          <CategoryCard
+            category={featuredCategory}
+            index={featuredIndex}
+            isFeatured
+          />
+
+          {/* Rotation indicator dots - below the card */}
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
             {categories.map((_, idx) => (
               <button
                 key={idx}
@@ -82,18 +82,11 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
               />
             ))}
           </div>
-
-          <CategoryCard
-            category={featuredCategory}
-            index={featuredIndex}
-            isFeatured
-          />
         </div>
 
-        {/* Other categories in a row */}
-        <div className="grid grid-cols-3 gap-2 mt-8">
-          {otherCategories.slice(0, 3).map((category, idx) => {
-            // Calculate the original index for proper numbering
+        {/* Other 3 categories in a row below */}
+        <div className="grid grid-cols-3 gap-2">
+          {otherCategories.slice(0, 3).map((category) => {
             const originalIndex = categories.findIndex(c => c.id === category.id)
             return (
               <CategoryCard
@@ -105,6 +98,6 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
           })}
         </div>
       </div>
-    </>
+    </div>
   )
 }
