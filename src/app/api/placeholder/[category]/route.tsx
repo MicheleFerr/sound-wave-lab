@@ -79,8 +79,10 @@ export async function GET(
   // Allow custom index via query param: /api/placeholder/fashion?index=03
   const customIndex = searchParams.get('index')
 
-  // Option to hide text completely: /api/placeholder/fashion?minimal=true
-  const isMinimal = searchParams.get('minimal') === 'true'
+  // Minimal mode is ON by default (no text, just graphics)
+  // Use ?minimal=false to show text
+  const minimalParam = searchParams.get('minimal')
+  const isMinimal = minimalParam !== 'false'
 
   // Get category name (use custom label if provided)
   const categoryName = customLabel
