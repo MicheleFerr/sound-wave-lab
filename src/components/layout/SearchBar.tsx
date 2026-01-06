@@ -46,20 +46,20 @@ export function SearchBar() {
         </Button>
       )}
 
-      {/* Search Bar Overlay */}
+      {/* Search Bar Overlay - Full Width like Off-White */}
       <div
         className={`
-          absolute left-0 right-0 top-full z-50
-          transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+          fixed left-0 right-0 top-[57px] md:top-[65px] z-50
+          transition-all duration-300 ease-out
           ${isOpen
-            ? 'opacity-100 translate-y-0 scale-100'
-            : 'opacity-0 -translate-y-2 scale-95 pointer-events-none'
+            ? 'opacity-100 translate-y-0'
+            : 'opacity-0 -translate-y-1 pointer-events-none'
           }
         `}
       >
-        <div className="bg-background border-b shadow-sm">
-          <form onSubmit={handleSubmit} className="container mx-auto px-4">
-            <div className="flex items-center h-14 gap-3">
+        <div className="bg-background">
+          <form onSubmit={handleSubmit} className="px-4 md:px-6">
+            <div className="flex items-center h-12 gap-3">
               <Search className="h-5 w-5 text-muted-foreground flex-shrink-0" />
               <input
                 ref={inputRef}
@@ -72,19 +72,14 @@ export function SearchBar() {
               <button
                 type="button"
                 onClick={handleClose}
-                className="p-2 hover:bg-muted rounded-full transition-colors"
+                className="p-1 hover:opacity-60 transition-opacity"
                 aria-label="Chiudi ricerca"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            {/* Animated bottom line */}
-            <div
-              className={`
-                h-px bg-foreground/20 transition-all duration-700 ease-out
-                ${isOpen ? 'w-full' : 'w-0'}
-              `}
-            />
+            {/* Bottom line - full width */}
+            <div className="h-px bg-foreground/20" />
           </form>
         </div>
       </div>
