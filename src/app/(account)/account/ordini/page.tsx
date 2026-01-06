@@ -70,7 +70,8 @@ export default async function OrdersPage() {
     redirect('/login')
   }
 
-  const { data: orders } = await supabase
+  // Get orders by user_id
+  const { data: userOrders } = await supabase
     .from('orders')
     .select(`
       id,
@@ -93,7 +94,43 @@ export default async function OrdersPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
-  const typedOrders = (orders || []) as Order[]
+  // Also get guest orders with matching email (not yet associated)
+  const { data: guestOrders } = await supabase
+    .from('orders')
+    .select(`
+      id,
+      order_number,
+      status,
+      total,
+      created_at,
+      tracking_number,
+      carrier,
+      shipping_address,
+      order_items (
+        id,
+        product_name,
+        variant_sku,
+        variant_attributes,
+        quantity,
+        unit_price,
+        total_price
+      )
+    `)
+    .is('user_id', null)
+    .order('created_at', { ascending: false })
+
+  // Filter guest orders by email and merge with user orders
+  const guestOrdersForUser = (guestOrders || []).filter(order => {
+    const shippingEmail = (order.shipping_address as { email?: string })?.email
+    return shippingEmail?.toLowerCase() === user.email?.toLowerCase()
+  })
+
+  // Merge and deduplicate by order_number
+  const allOrders = [...(userOrders || []), ...guestOrdersForUser]
+  const uniqueOrders = allOrders.filter((order, index, self) =>
+    index === self.findIndex(o => o.order_number === order.order_number)
+  )
+  const typedOrders = uniqueOrders as Order[]
 
   return (
     <div className="space-y-6">
