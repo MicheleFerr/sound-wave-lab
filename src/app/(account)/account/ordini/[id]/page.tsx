@@ -5,8 +5,9 @@ import { redirect, notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Package, MapPin, CreditCard, Truck } from 'lucide-react'
+import { ArrowLeft, Package, MapPin, CreditCard, Truck, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { getTrackingUrl } from '@/lib/utils/tracking'
 
 export const metadata: Metadata = {
   title: 'Dettaglio ordine | Sound Wave Lab',
@@ -47,6 +48,7 @@ interface Order {
   updated_at: string
   tracking_number: string | null
   carrier: string | null
+  estimated_delivery_date: string | null
   shipping_address: ShippingAddress
   notes: string | null
   order_items: OrderItem[]
@@ -109,6 +111,7 @@ export default async function OrderDetailPage({
       updated_at,
       tracking_number,
       carrier,
+      estimated_delivery_date,
       shipping_address,
       notes,
       order_items (
@@ -244,15 +247,43 @@ export default async function OrderDetailPage({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  <p>
+                <div className="space-y-3">
+                  <div>
                     <span className="text-muted-foreground">Corriere:</span>{' '}
                     <span className="font-medium">{typedOrder.carrier || 'Non specificato'}</span>
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     <span className="text-muted-foreground">Numero tracking:</span>{' '}
                     <span className="font-mono font-medium">{typedOrder.tracking_number}</span>
-                  </p>
+                  </div>
+
+                  {/* Estimated Delivery Date */}
+                  {typedOrder.estimated_delivery_date && (
+                    <div>
+                      <span className="text-muted-foreground">Consegna prevista:</span>{' '}
+                      <span className="font-medium">{formatDate(typedOrder.estimated_delivery_date)}</span>
+                    </div>
+                  )}
+
+                  {/* Tracking Link Button */}
+                  {(() => {
+                    const trackingUrl = getTrackingUrl(
+                      typedOrder.carrier || '',
+                      typedOrder.tracking_number
+                    )
+                    return trackingUrl ? (
+                      <Button asChild className="w-full mt-2">
+                        <a
+                          href={trackingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Traccia il pacco
+                          <ExternalLink className="ml-2 h-4 w-4" />
+                        </a>
+                      </Button>
+                    ) : null
+                  })()}
                 </div>
               </CardContent>
             </Card>

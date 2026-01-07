@@ -7,6 +7,7 @@ import {
 } from '@react-email/components'
 import * as React from 'react'
 import { EmailLayout } from './components/Layout'
+import { getTrackingUrl } from '@/lib/utils/tracking'
 
 interface OrderShippedProps {
   orderNumber: string
@@ -21,29 +22,7 @@ export function OrderShippedEmail({
   trackingNumber,
   carrier,
 }: OrderShippedProps) {
-  // Generate tracking URL based on carrier
-  const getTrackingUrl = () => {
-    const carrierLower = carrier.toLowerCase()
-    if (carrierLower.includes('poste') || carrierLower.includes('sda')) {
-      return `https://www.sda.it/wps/portal/Servizi_Online/dettaglio-spedizione?locale=it&tression=${trackingNumber}`
-    }
-    if (carrierLower.includes('dhl')) {
-      return `https://www.dhl.com/it-it/home/tracking.html?tracking-id=${trackingNumber}`
-    }
-    if (carrierLower.includes('ups')) {
-      return `https://www.ups.com/track?tracknum=${trackingNumber}`
-    }
-    if (carrierLower.includes('gls')) {
-      return `https://www.gls-italy.com/it/servizi/tracking?match=${trackingNumber}`
-    }
-    if (carrierLower.includes('brt') || carrierLower.includes('bartolini')) {
-      return `https://vas.brt.it/vas/sped_det_show.hsm?referer=sped_numspe_par.htm&Ession=${trackingNumber}`
-    }
-    // Default - return null
-    return null
-  }
-
-  const trackingUrl = getTrackingUrl()
+  const trackingUrl = getTrackingUrl(carrier, trackingNumber)
 
   return (
     <EmailLayout preview={`Il tuo ordine #${orderNumber} è stato spedito!`}>
