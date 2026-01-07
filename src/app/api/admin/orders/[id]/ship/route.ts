@@ -30,7 +30,7 @@ export async function POST(
 
     // Get request body
     const body = await request.json()
-    const { trackingNumber, carrier, estimatedDeliveryDate } = body
+    const { trackingNumber, carrier, trackingUrl } = body
 
     if (!trackingNumber || !carrier) {
       return NextResponse.json(
@@ -57,7 +57,7 @@ export async function POST(
         status: 'shipped',
         tracking_number: trackingNumber,
         carrier: carrier,
-        estimated_delivery_date: estimatedDeliveryDate || null,
+        tracking_url: trackingUrl || null,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
@@ -79,6 +79,7 @@ export async function POST(
         customerEmail: shippingAddress.email,
         trackingNumber,
         carrier,
+        trackingUrl: trackingUrl || null,
       }).catch(err => console.error('Failed to send shipped email:', err))
     }
 

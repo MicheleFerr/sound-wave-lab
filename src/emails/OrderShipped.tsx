@@ -7,13 +7,13 @@ import {
 } from '@react-email/components'
 import * as React from 'react'
 import { EmailLayout } from './components/Layout'
-import { getTrackingUrl } from '@/lib/utils/tracking'
 
 interface OrderShippedProps {
   orderNumber: string
   customerName: string
   trackingNumber: string
   carrier: string
+  trackingUrl?: string | null
 }
 
 export function OrderShippedEmail({
@@ -21,8 +21,8 @@ export function OrderShippedEmail({
   customerName,
   trackingNumber,
   carrier,
+  trackingUrl,
 }: OrderShippedProps) {
-  const trackingUrl = getTrackingUrl(carrier, trackingNumber)
 
   return (
     <EmailLayout preview={`Il tuo ordine #${orderNumber} è stato spedito!`}>

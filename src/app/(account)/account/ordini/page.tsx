@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Package, ChevronRight, ShoppingBag, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
-import { getTrackingUrl } from '@/lib/utils/tracking'
 
 export const metadata: Metadata = {
   title: 'I miei ordini | Sound Wave Lab',
@@ -35,7 +34,7 @@ interface Order {
   created_at: string
   tracking_number: string | null
   carrier: string | null
-  estimated_delivery_date: string | null
+  tracking_url: string | null
   order_items: OrderItem[]
 }
 
@@ -83,7 +82,7 @@ export default async function OrdersPage() {
       created_at,
       tracking_number,
       carrier,
-      estimated_delivery_date,
+      tracking_url,
       order_items (
         id,
         product_name,
@@ -108,7 +107,7 @@ export default async function OrdersPage() {
       created_at,
       tracking_number,
       carrier,
-      estimated_delivery_date,
+      tracking_url,
       shipping_address,
       order_items (
         id,
@@ -217,34 +216,23 @@ export default async function OrdersPage() {
                     <div className="border-t pt-3 space-y-2">
                       <div className="text-sm">
                         <span className="text-muted-foreground">Tracking:</span>{' '}
-                        {(() => {
-                          const trackingUrl = getTrackingUrl(order.carrier || '', order.tracking_number)
-                          return trackingUrl ? (
-                            <a
-                              href={trackingUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-mono underline hover:text-brand-teal inline-flex items-center gap-1"
-                            >
-                              {order.tracking_number}
-                              <ExternalLink className="h-3 w-3" />
-                            </a>
-                          ) : (
-                            <span className="font-mono">{order.tracking_number}</span>
-                          )
-                        })()}
+                        {order.tracking_url ? (
+                          <a
+                            href={order.tracking_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-mono underline hover:text-brand-teal inline-flex items-center gap-1"
+                          >
+                            {order.tracking_number}
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        ) : (
+                          <span className="font-mono">{order.tracking_number}</span>
+                        )}
                         {order.carrier && (
                           <span className="text-muted-foreground"> ({order.carrier})</span>
                         )}
                       </div>
-
-                      {/* Estimated Delivery Date */}
-                      {order.estimated_delivery_date && (
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Consegna prevista:</span>{' '}
-                          <span className="font-medium">{formatDate(order.estimated_delivery_date)}</span>
-                        </div>
-                      )}
                     </div>
                   )}
 

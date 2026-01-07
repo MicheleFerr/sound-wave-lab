@@ -44,7 +44,7 @@ export function ShipOrderModal({
   const [loading, setLoading] = useState(false)
   const [carrier, setCarrier] = useState('')
   const [trackingNumber, setTrackingNumber] = useState('')
-  const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState('')
+  const [trackingUrl, setTrackingUrl] = useState('')
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,7 +65,7 @@ export function ShipOrderModal({
         body: JSON.stringify({
           carrier,
           trackingNumber,
-          estimatedDeliveryDate: estimatedDeliveryDate || null,
+          trackingUrl: trackingUrl || null,
         }),
       })
 
@@ -77,7 +77,7 @@ export function ShipOrderModal({
       setOpen(false)
       setCarrier('')
       setTrackingNumber('')
-      setEstimatedDeliveryDate('')
+      setTrackingUrl('')
       onShipped?.()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Errore durante la spedizione')
@@ -141,14 +141,15 @@ export function ShipOrderModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="deliveryDate">
-                Data Consegna Stimata (opzionale)
+              <Label htmlFor="trackingUrl">
+                Link Tracciamento (opzionale)
               </Label>
               <Input
-                id="deliveryDate"
-                type="date"
-                value={estimatedDeliveryDate}
-                onChange={(e) => setEstimatedDeliveryDate(e.target.value)}
+                id="trackingUrl"
+                type="url"
+                placeholder="https://track.sda.it/..."
+                value={trackingUrl}
+                onChange={(e) => setTrackingUrl(e.target.value)}
               />
             </div>
 

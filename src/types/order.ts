@@ -35,7 +35,7 @@ export interface Order {
   total: number
   tracking_number: string | null
   carrier: string | null
-  estimated_delivery_date: string | null
+  tracking_url: string | null
   items: OrderItem[]
   created_at: string
 }
