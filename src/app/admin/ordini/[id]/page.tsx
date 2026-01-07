@@ -5,8 +5,12 @@ import { redirect, notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Package, MapPin, CreditCard, Truck } from 'lucide-react'
+import { ArrowLeft, Package, MapPin, CreditCard, Truck, Clock, MessageSquare } from 'lucide-react'
 import Link from 'next/link'
+import { OrderStatusSelector } from '@/components/admin/OrderStatusSelector'
+import { OrderNotesSection } from '@/components/admin/OrderNotesSection'
+import { OrderActivityTimeline } from '@/components/admin/OrderActivityTimeline'
+import { OrderActionsMenu } from '@/components/admin/OrderActionsMenu'
 
 export const metadata: Metadata = {
   title: 'Dettaglio ordine | Admin',
@@ -148,9 +152,17 @@ export default async function AdminOrderDetailPage({
             Effettuato il {formatDate(typedOrder.created_at)}
           </p>
         </div>
-        <Badge variant={status.variant} className="text-sm">
-          {status.label}
-        </Badge>
+        <div className="flex items-center gap-3">
+          <OrderStatusSelector
+            orderId={typedOrder.id}
+            currentStatus={typedOrder.status}
+          />
+          <OrderActionsMenu
+            orderId={typedOrder.id}
+            orderNumber={typedOrder.order_number}
+            currentStatus={typedOrder.status}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -284,6 +296,35 @@ export default async function AdminOrderDetailPage({
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      {/* Notes and Activity Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Order Notes */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <MessageSquare className="mr-2 h-5 w-5" />
+              Note ordine
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <OrderNotesSection orderId={typedOrder.id} />
+          </CardContent>
+        </Card>
+
+        {/* Activity Timeline */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Clock className="mr-2 h-5 w-5" />
+              Cronologia attività
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <OrderActivityTimeline orderId={typedOrder.id} />
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
