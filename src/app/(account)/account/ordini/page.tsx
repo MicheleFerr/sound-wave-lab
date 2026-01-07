@@ -34,7 +34,6 @@ interface Order {
   created_at: string
   tracking_number: string | null
   carrier: string | null
-  tracking_url: string | null
   order_items: OrderItem[]
 }
 
@@ -88,7 +87,6 @@ export default async function OrdersPage() {
       created_at,
       tracking_number,
       carrier,
-      tracking_url,
       order_items (
         id,
         product_name,
@@ -120,7 +118,6 @@ export default async function OrdersPage() {
       created_at,
       tracking_number,
       carrier,
-      tracking_url,
       shipping_address,
       order_items (
         id,
@@ -262,19 +259,7 @@ export default async function OrdersPage() {
                     <div className="border-t pt-3 space-y-2">
                       <div className="text-sm">
                         <span className="text-muted-foreground">Tracking:</span>{' '}
-                        {order.tracking_url ? (
-                          <a
-                            href={order.tracking_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-mono underline hover:text-brand-teal inline-flex items-center gap-1"
-                          >
-                            {order.tracking_number}
-                            <ExternalLink className="h-3 w-3" />
-                          </a>
-                        ) : (
-                          <span className="font-mono">{order.tracking_number}</span>
-                        )}
+                        <span className="font-mono">{order.tracking_number}</span>
                         {order.carrier && (
                           <span className="text-muted-foreground"> ({order.carrier})</span>
                         )}
