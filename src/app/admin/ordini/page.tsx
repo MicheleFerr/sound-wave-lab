@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Eye } from 'lucide-react'
 import { OrdersTable } from '@/components/admin/OrdersTable'
+import { OrderFilters } from '@/components/admin/OrderFilters'
+import { OrderBulkActions } from '@/components/admin/OrderBulkActions'
 
 interface Order {
   id: string
@@ -16,11 +18,17 @@ interface Order {
   } | null
 }
 
+interface SearchParams {
+  search?: string
+  status?: string
+  dateFrom?: string
+  dateTo?: string
+}
 
-async function getOrders() {
+async function getOrders(filters: SearchParams) {
   const supabase = await createClient()
 
-  const { data: orders } = await supabase
+  let query = supabase
     .from('orders')
     .select(`
       id,
@@ -30,7 +38,30 @@ async function getOrders() {
       created_at,
       user:profiles(email, full_name)
     `)
-    .order('created_at', { ascending: false })
+
+  // Apply filters
+  if (filters.status && filters.status !== 'all') {
+    query = query.eq('status', filters.status)
+  }
+
+  if (filters.dateFrom) {
+    query = query.gte('created_at', new Date(filters.dateFrom).toISOString())
+  }
+
+  if (filters.dateTo) {
+    const dateTo = new Date(filters.dateTo)
+    dateTo.setHours(23, 59, 59, 999)
+    query = query.lte('created_at', dateTo.toISOString())
+  }
+
+  // Search by order number or email
+  if (filters.search) {
+    query = query.or(`order_number.ilike.%${filters.search}%`)
+  }
+
+  query = query.order('created_at', { ascending: false })
+
+  const { data: orders } = await query
 
   // Transform the data to handle Supabase's array return for single relations
   return (orders || []).map(order => ({
@@ -69,9 +100,14 @@ async function getStats() {
   }
 }
 
-export default async function AdminOrdersPage() {
+export default async function AdminOrdersPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>
+}) {
+  const filters = await searchParams
   const [orders, stats] = await Promise.all([
-    getOrders(),
+    getOrders(filters),
     getStats(),
   ])
 
@@ -128,10 +164,20 @@ export default async function AdminOrdersPage() {
         </Card>
       </div>
 
+      {/* Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <OrderFilters />
+        </CardContent>
+      </Card>
+
       {/* Orders Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Tutti gli Ordini</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Tutti gli Ordini ({orders.length})</CardTitle>
+            <OrderBulkActions />
+          </div>
         </CardHeader>
         <CardContent>
           {orders.length === 0 ? (
