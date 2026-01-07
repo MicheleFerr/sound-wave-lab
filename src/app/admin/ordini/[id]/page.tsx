@@ -11,6 +11,7 @@ import { OrderStatusSelector } from '@/components/admin/OrderStatusSelector'
 import { OrderNotesSection } from '@/components/admin/OrderNotesSection'
 import { OrderActivityTimeline } from '@/components/admin/OrderActivityTimeline'
 import { OrderActionsMenu } from '@/components/admin/OrderActionsMenu'
+import { OrderStatus } from '@/types/order'
 
 export const metadata: Metadata = {
   title: 'Dettaglio ordine | Admin',
@@ -43,7 +44,7 @@ interface ShippingAddress {
 interface Order {
   id: string
   order_number: string
-  status: string
+  status: OrderStatus
   subtotal: number
   shipping_cost: number
   tax_amount: number

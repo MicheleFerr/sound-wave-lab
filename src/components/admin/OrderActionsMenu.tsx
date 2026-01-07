@@ -24,7 +24,6 @@ interface OrderActionsMenuProps {
 }
 
 export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderActionsMenuProps) {
-  const [showShipModal, setShowShipModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
@@ -101,7 +100,17 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
   const canRefund = ['paid', 'processing', 'shipped', 'delivered'].includes(currentStatus)
 
   return (
-    <>
+    <div className="flex items-center gap-2">
+      {/* Ship order button - only show if order can be shipped */}
+      {canShip && (
+        <ShipOrderModal
+          orderId={orderId}
+          orderNumber={orderNumber}
+          onShipped={() => router.refresh()}
+        />
+      )}
+
+      {/* Other actions dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon" disabled={isLoading}>
@@ -111,13 +120,6 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel>Azioni ordine</DropdownMenuLabel>
           <DropdownMenuSeparator />
-
-          {canShip && (
-            <DropdownMenuItem onClick={() => setShowShipModal(true)}>
-              <Truck className="mr-2 h-4 w-4" />
-              Spedisci ordine
-            </DropdownMenuItem>
-          )}
 
           {canMarkDelivered && (
             <DropdownMenuItem onClick={() => handleAction('mark-delivered')}>
@@ -151,18 +153,6 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {showShipModal && (
-        <ShipOrderModal
-          orderId={orderId}
-          orderNumber={orderNumber}
-          onClose={() => setShowShipModal(false)}
-          onSuccess={() => {
-            setShowShipModal(false)
-            router.refresh()
-          }}
-        />
-      )}
-    </>
+    </div>
   )
 }
