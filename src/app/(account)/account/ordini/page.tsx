@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Package, ChevronRight, ShoppingBag, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { getTrackingUrl } from '@/lib/utils/tracking'
 
 export const metadata: Metadata = {
   title: 'I miei ordini | Sound Wave Lab',
@@ -70,12 +71,6 @@ export default async function OrdersPage() {
     redirect('/login')
   }
 
-  // DEBUG: Log user info
-  console.log('🔍 [DEBUG] User logged in:', {
-    id: user.id,
-    email: user.email
-  })
-
   // Get orders by user_id
   const { data: userOrders, error: userOrdersError } = await supabase
     .from('orders')
@@ -99,13 +94,6 @@ export default async function OrdersPage() {
     `)
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
-
-  // DEBUG: Log user orders result
-  console.log('🔍 [DEBUG] User orders query:', {
-    count: userOrders?.length || 0,
-    orders: userOrders?.map(o => ({ order_number: o.order_number, status: o.status })),
-    error: userOrdersError
-  })
 
   // Also get guest orders with matching email (not yet associated)
   const { data: guestOrders, error: guestOrdersError } = await supabase
@@ -132,37 +120,10 @@ export default async function OrdersPage() {
     .is('user_id', null)
     .order('created_at', { ascending: false })
 
-  // DEBUG: Log guest orders result
-  console.log('🔍 [DEBUG] Guest orders query:', {
-    count: guestOrders?.length || 0,
-    orders: guestOrders?.map(o => ({
-      order_number: o.order_number,
-      status: o.status,
-      shipping_address: o.shipping_address
-    })),
-    error: guestOrdersError
-  })
-
   // Filter guest orders by email and merge with user orders
   const guestOrdersForUser = (guestOrders || []).filter(order => {
     const shippingEmail = (order.shipping_address as { email?: string })?.email
-    const matches = shippingEmail?.toLowerCase() === user.email?.toLowerCase()
-
-    // DEBUG: Log email matching
-    console.log('🔍 [DEBUG] Email matching for order:', {
-      order_number: order.order_number,
-      shippingEmail,
-      userEmail: user.email,
-      matches
-    })
-
-    return matches
-  })
-
-  // DEBUG: Log filtered guest orders
-  console.log('🔍 [DEBUG] Guest orders matched by email:', {
-    count: guestOrdersForUser.length,
-    orders: guestOrdersForUser.map(o => o.order_number)
+    return shippingEmail?.toLowerCase() === user.email?.toLowerCase()
   })
 
   // Merge and deduplicate by order_number
@@ -171,12 +132,6 @@ export default async function OrdersPage() {
     index === self.findIndex(o => o.order_number === order.order_number)
   )
   const typedOrders = uniqueOrders as Order[]
-
-  // DEBUG: Log final result
-  console.log('🔍 [DEBUG] Final orders to display:', {
-    totalCount: typedOrders.length,
-    orders: typedOrders.map(o => ({ order_number: o.order_number, status: o.status }))
-  })
 
   return (
     <div className="space-y-6">
@@ -259,7 +214,22 @@ export default async function OrdersPage() {
                     <div className="border-t pt-3 space-y-2">
                       <div className="text-sm">
                         <span className="text-muted-foreground">Tracking:</span>{' '}
-                        <span className="font-mono">{order.tracking_number}</span>
+                        {(() => {
+                          const trackingUrl = getTrackingUrl(order.carrier || '', order.tracking_number)
+                          return trackingUrl ? (
+                            <a
+                              href={trackingUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-mono underline hover:text-brand-teal inline-flex items-center"
+                            >
+                              {order.tracking_number}
+                              <ExternalLink className="ml-1 h-3 w-3" />
+                            </a>
+                          ) : (
+                            <span className="font-mono">{order.tracking_number}</span>
+                          )
+                        })()}
                         {order.carrier && (
                           <span className="text-muted-foreground"> ({order.carrier})</span>
                         )}

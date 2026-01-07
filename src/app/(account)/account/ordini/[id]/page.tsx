@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Package, MapPin, CreditCard, Truck, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { getTrackingUrl } from '@/lib/utils/tracking'
 
 export const metadata: Metadata = {
   title: 'Dettaglio ordine | Sound Wave Lab',
@@ -246,13 +247,26 @@ export default async function OrderDetailPage({
               <CardContent>
                 <div className="space-y-3">
                   <div>
-                    <span className="text-muted-foreground">Corriere:</span>{' '}
+                    <span className="text-sm text-muted-foreground">Corriere:</span>{' '}
                     <span className="font-medium">{typedOrder.carrier || 'Non specificato'}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Numero tracking:</span>{' '}
+                    <span className="text-sm text-muted-foreground">Numero tracking:</span>{' '}
                     <span className="font-mono font-medium">{typedOrder.tracking_number}</span>
                   </div>
+
+                  {/* Tracking Link Button */}
+                  {(() => {
+                    const trackingUrl = getTrackingUrl(typedOrder.carrier || '', typedOrder.tracking_number)
+                    return trackingUrl ? (
+                      <Button asChild className="w-full mt-2">
+                        <a href={trackingUrl} target="_blank" rel="noopener noreferrer">
+                          Traccia il pacco
+                          <ExternalLink className="ml-2 h-4 w-4" />
+                        </a>
+                      </Button>
+                    ) : null
+                  })()}
                 </div>
               </CardContent>
             </Card>

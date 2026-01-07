@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import { sendOrderShippedEmail } from '@/lib/email/send'
+import { getTrackingUrl } from '@/lib/utils/tracking'
 
 export async function POST(
   request: NextRequest,
@@ -30,7 +31,7 @@ export async function POST(
 
     // Get request body
     const body = await request.json()
-    const { trackingNumber, carrier, trackingUrl } = body
+    const { trackingNumber, carrier } = body
 
     if (!trackingNumber || !carrier) {
       return NextResponse.json(
@@ -57,7 +58,6 @@ export async function POST(
         status: 'shipped',
         tracking_number: trackingNumber,
         carrier: carrier,
-        tracking_url: trackingUrl || null,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
@@ -70,16 +70,17 @@ export async function POST(
       )
     }
 
-    // Send shipped email
+    // Send shipped email with auto-generated tracking URL
     const shippingAddress = order.shipping_address as { fullName?: string; email?: string }
     if (shippingAddress?.email) {
+      const trackingUrl = getTrackingUrl(carrier, trackingNumber)
       sendOrderShippedEmail({
         orderNumber: order.order_number,
         customerName: shippingAddress.fullName || '',
         customerEmail: shippingAddress.email,
         trackingNumber,
         carrier,
-        trackingUrl: trackingUrl || null,
+        trackingUrl,
       }).catch(err => console.error('Failed to send shipped email:', err))
     }
 

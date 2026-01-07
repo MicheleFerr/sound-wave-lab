@@ -44,7 +44,6 @@ export function ShipOrderModal({
   const [loading, setLoading] = useState(false)
   const [carrier, setCarrier] = useState('')
   const [trackingNumber, setTrackingNumber] = useState('')
-  const [trackingUrl, setTrackingUrl] = useState('')
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,7 +64,6 @@ export function ShipOrderModal({
         body: JSON.stringify({
           carrier,
           trackingNumber,
-          trackingUrl: trackingUrl || null,
         }),
       })
 
@@ -77,7 +75,6 @@ export function ShipOrderModal({
       setOpen(false)
       setCarrier('')
       setTrackingNumber('')
-      setTrackingUrl('')
       onShipped?.()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Errore durante la spedizione')
@@ -138,19 +135,9 @@ export function ShipOrderModal({
                 value={trackingNumber}
                 onChange={(e) => setTrackingNumber(e.target.value)}
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="trackingUrl">
-                Link Tracciamento (opzionale)
-              </Label>
-              <Input
-                id="trackingUrl"
-                type="url"
-                placeholder="https://track.sda.it/..."
-                value={trackingUrl}
-                onChange={(e) => setTrackingUrl(e.target.value)}
-              />
+              <p className="text-xs text-muted-foreground">
+                Il link di tracciamento verrà generato automaticamente in base al corriere
+              </p>
             </div>
 
             <div className="flex gap-3 justify-end pt-4">
