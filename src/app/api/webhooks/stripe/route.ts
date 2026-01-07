@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { stripe } from '@/lib/stripe/server'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
-import { sendOrderConfirmationEmail } from '@/lib/email/send'
+import { sendOrderConfirmationEmail, sendOrderRefundedEmail } from '@/lib/email/send'
 
 // Use service role client for webhook operations
 const supabase = createClient(
@@ -41,7 +41,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    switch (event.type) {
+    // Handle refund events with type assertion since they may not be in older Stripe type definitions
+    const eventType = event.type as string
+
+    switch (eventType) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
 
@@ -185,8 +188,174 @@ export async function POST(request: NextRequest) {
         break
       }
 
+      case 'charge.refunded': {
+        const charge = event.data.object as Stripe.Charge
+
+        // Find order by payment_intent
+        const { data: order } = await supabase
+          .from('orders')
+          .select('id, order_number, total, shipping_address, status')
+          .eq('stripe_payment_intent', charge.payment_intent)
+          .single()
+
+        if (!order) {
+          console.error('Order not found for payment_intent:', charge.payment_intent)
+          break
+        }
+
+        // Check if refund amount equals total (full refund)
+        const refundedAmount = charge.amount_refunded / 100
+        const isFullRefund = refundedAmount >= order.total
+
+        // Update order status to refunded if fully refunded
+        if (isFullRefund && order.status !== 'refunded') {
+          await supabase
+            .from('orders')
+            .update({
+              status: 'refunded',
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', order.id)
+
+          console.log(`Order ${order.order_number} marked as refunded (full refund)`)
+        }
+
+        // Log activity
+        await supabase
+          .from('order_activity_log')
+          .insert({
+            order_id: order.id,
+            action_type: 'refund',
+            performed_by: null, // Webhook = system action
+            previous_value: { status: order.status, amount_refunded: 0 },
+            new_value: { status: isFullRefund ? 'refunded' : order.status, amount_refunded: refundedAmount },
+            metadata: {
+              stripe_charge_id: charge.id,
+              refund_amount: refundedAmount,
+              refund_currency: 'EUR',
+              is_full_refund: isFullRefund,
+              order_number: order.order_number,
+              webhook_event: 'charge.refunded',
+            },
+          })
+
+        console.log('Charge refunded:', charge.id, `Amount: €${refundedAmount}`)
+        break
+      }
+
+      case 'refund.succeeded': {
+        const refund = event.data.object as Stripe.Refund
+
+        // Find order by payment_intent (from charge)
+        const charge = await stripe.charges.retrieve(refund.charge as string)
+
+        const { data: order } = await supabase
+          .from('orders')
+          .select('id, order_number, total, shipping_address, status')
+          .eq('stripe_payment_intent', charge.payment_intent)
+          .single()
+
+        if (!order) {
+          console.error('Order not found for charge:', refund.charge)
+          break
+        }
+
+        const refundedAmount = refund.amount / 100
+        const isFullRefund = refundedAmount >= order.total
+
+        // Update order status if full refund
+        if (isFullRefund && order.status !== 'refunded') {
+          await supabase
+            .from('orders')
+            .update({
+              status: 'refunded',
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', order.id)
+        }
+
+        // Log activity
+        await supabase
+          .from('order_activity_log')
+          .insert({
+            order_id: order.id,
+            action_type: 'refund',
+            performed_by: null,
+            previous_value: { status: order.status },
+            new_value: { status: isFullRefund ? 'refunded' : order.status },
+            metadata: {
+              stripe_refund_id: refund.id,
+              refund_amount: refundedAmount,
+              refund_currency: refund.currency.toUpperCase(),
+              refund_reason: refund.reason || 'No reason provided',
+              is_full_refund: isFullRefund,
+              order_number: order.order_number,
+              webhook_event: 'refund.succeeded',
+            },
+          })
+
+        // Send refund confirmation email to customer
+        const shippingAddress = order.shipping_address as { fullName?: string; email?: string }
+        if (shippingAddress?.email) {
+          await sendOrderRefundedEmail({
+            orderNumber: order.order_number,
+            customerName: shippingAddress.fullName || 'Cliente',
+            customerEmail: shippingAddress.email,
+            refundAmount: refundedAmount,
+            refundReason: refund.reason || undefined,
+            isPartial: !isFullRefund,
+            estimatedDays: '5-10',
+          }).catch(err => console.error('Failed to send refund email:', err))
+        }
+
+        console.log(`Refund succeeded: ${refund.id}, Order: ${order.order_number}`)
+        break
+      }
+
+      case 'refund.failed': {
+        const refund = event.data.object as Stripe.Refund
+
+        // Find order by charge
+        const charge = await stripe.charges.retrieve(refund.charge as string)
+
+        const { data: order } = await supabase
+          .from('orders')
+          .select('id, order_number')
+          .eq('stripe_payment_intent', charge.payment_intent)
+          .single()
+
+        if (!order) {
+          console.error('Order not found for failed refund charge:', refund.charge)
+          break
+        }
+
+        // Log failed refund
+        await supabase
+          .from('order_activity_log')
+          .insert({
+            order_id: order.id,
+            action_type: 'refund',
+            performed_by: null,
+            previous_value: { status: 'refund_attempted' },
+            new_value: { status: 'refund_failed' },
+            metadata: {
+              stripe_refund_id: refund.id,
+              refund_amount: refund.amount / 100,
+              refund_currency: refund.currency.toUpperCase(),
+              failure_reason: refund.failure_reason || 'Unknown failure',
+              order_number: order.order_number,
+              webhook_event: 'refund.failed',
+              alert_admin: true,
+            },
+          })
+
+        // TODO: Send alert to admin about failed refund
+        console.error(`⚠️ REFUND FAILED - Order: ${order.order_number}, Refund: ${refund.id}, Reason: ${refund.failure_reason}`)
+        break
+      }
+
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        console.log(`Unhandled event type: ${eventType}`)
     }
 
     return NextResponse.json({ received: true })
