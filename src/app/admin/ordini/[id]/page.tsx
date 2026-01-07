@@ -5,7 +5,7 @@ import { redirect, notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Package, MapPin, CreditCard, Truck, ExternalLink } from 'lucide-react'
+import { ArrowLeft, Package, MapPin, CreditCard, Truck } from 'lucide-react'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -49,7 +49,6 @@ interface Order {
   updated_at: string
   tracking_number: string | null
   carrier: string | null
-  tracking_url: string | null
   shipping_address: ShippingAddress
   notes: string | null
   order_items: OrderItem[]
@@ -111,7 +110,6 @@ export default async function AdminOrderDetailPage({
       updated_at,
       tracking_number,
       carrier,
-      tracking_url,
       shipping_address,
       notes,
       order_items (
@@ -213,20 +211,6 @@ export default async function AdminOrderDetailPage({
                     <span className="text-muted-foreground">Numero tracking:</span>{' '}
                     <span className="font-mono font-medium">{typedOrder.tracking_number}</span>
                   </div>
-
-                  {/* Tracking Link Button */}
-                  {typedOrder.tracking_url && (
-                    <Button asChild className="w-full mt-2">
-                      <a
-                        href={typedOrder.tracking_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Apri tracciamento
-                        <ExternalLink className="ml-2 h-4 w-4" />
-                      </a>
-                    </Button>
-                  )}
                 </div>
               </CardContent>
             </Card>
