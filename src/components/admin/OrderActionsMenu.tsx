@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { MoreVertical, Mail, XCircle, DollarSign, Truck, CheckCircle } from 'lucide-react'
 import { ShipOrderModal } from './ShipOrderModal'
+import { CancelOrderModal } from './CancelOrderModal'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -21,10 +22,19 @@ interface OrderActionsMenuProps {
   orderId: string
   orderNumber: string
   currentStatus: OrderStatus
+  orderTotal: number
+  hasPayment: boolean
 }
 
-export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderActionsMenuProps) {
+export function OrderActionsMenu({
+  orderId,
+  orderNumber,
+  currentStatus,
+  orderTotal,
+  hasPayment
+}: OrderActionsMenuProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const [showCancelModal, setShowCancelModal] = useState(false)
   const router = useRouter()
 
   const handleAction = async (action: string) => {
@@ -44,10 +54,10 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
           return
 
         case 'cancel':
-          endpoint = `/api/admin/orders/${orderId}/status`
-          method = 'PATCH'
-          body = { status: 'cancelled' }
-          break
+          // Open cancel modal instead of direct status change
+          setShowCancelModal(true)
+          setIsLoading(false)
+          return
 
         case 'mark-delivered':
           endpoint = `/api/admin/orders/${orderId}/status`
@@ -56,12 +66,14 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
           break
 
         case 'refund':
-          // TODO: Implement refund functionality
-          toast.info('Funzionalità in arrivo', {
-            description: 'La gestione rimborsi sarà disponibile a breve'
-          })
-          setIsLoading(false)
-          return
+          // Call refund API directly (full refund)
+          endpoint = `/api/admin/orders/${orderId}/refund`
+          method = 'POST'
+          body = {
+            reason: 'Richiesta manuale da admin',
+            notifyCustomer: true
+          }
+          break
 
         default:
           setIsLoading(false)
@@ -80,9 +92,17 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
         throw new Error(data.error || 'Errore durante l\'operazione')
       }
 
-      toast.success('Operazione completata', {
-        description: 'L\'azione è stata eseguita con successo',
-      })
+      // Custom success messages based on action
+      if (action === 'refund') {
+        toast.success('Rimborso elaborato', {
+          description: 'Il cliente riceverà il rimborso entro 5-10 giorni lavorativi',
+        })
+      } else {
+        toast.success('Operazione completata', {
+          description: 'L\'azione è stata eseguita con successo',
+        })
+      }
+
       router.refresh()
     } catch (error) {
       console.error('Error performing action:', error)
@@ -137,7 +157,7 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
 
           {canCancel && (
             <DropdownMenuItem
-              onClick={() => handleAction('cancel')}
+              onClick={() => setShowCancelModal(true)}
               className="text-destructive focus:text-destructive"
             >
               <XCircle className="mr-2 h-4 w-4" />
@@ -145,7 +165,7 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
             </DropdownMenuItem>
           )}
 
-          {canRefund && (
+          {canRefund && hasPayment && (
             <DropdownMenuItem onClick={() => handleAction('refund')}>
               <DollarSign className="mr-2 h-4 w-4" />
               Rimborsa ordine
@@ -153,6 +173,18 @@ export function OrderActionsMenu({ orderId, orderNumber, currentStatus }: OrderA
           )}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Cancel Order Modal */}
+      {showCancelModal && (
+        <CancelOrderModal
+          orderId={orderId}
+          orderNumber={orderNumber}
+          currentStatus={currentStatus}
+          orderTotal={orderTotal}
+          hasPayment={hasPayment}
+          onClose={() => setShowCancelModal(false)}
+        />
+      )}
     </div>
   )
 }

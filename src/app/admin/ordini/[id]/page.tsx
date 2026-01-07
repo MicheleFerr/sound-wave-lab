@@ -54,6 +54,7 @@ interface Order {
   updated_at: string
   tracking_number: string | null
   carrier: string | null
+  stripe_payment_intent: string | null
   shipping_address: ShippingAddress
   notes: string | null
   order_items: OrderItem[]
@@ -115,6 +116,7 @@ export default async function AdminOrderDetailPage({
       updated_at,
       tracking_number,
       carrier,
+      stripe_payment_intent,
       shipping_address,
       notes,
       order_items (
@@ -162,6 +164,8 @@ export default async function AdminOrderDetailPage({
             orderId={typedOrder.id}
             orderNumber={typedOrder.order_number}
             currentStatus={typedOrder.status}
+            orderTotal={typedOrder.total}
+            hasPayment={!!typedOrder.stripe_payment_intent}
           />
         </div>
       </div>
