@@ -71,8 +71,14 @@ export default async function OrdersPage() {
     redirect('/login')
   }
 
+  // DEBUG: Log user info
+  console.log('🔍 [DEBUG] User logged in:', {
+    id: user.id,
+    email: user.email
+  })
+
   // Get orders by user_id
-  const { data: userOrders } = await supabase
+  const { data: userOrders, error: userOrdersError } = await supabase
     .from('orders')
     .select(`
       id,
@@ -96,8 +102,15 @@ export default async function OrdersPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
+  // DEBUG: Log user orders result
+  console.log('🔍 [DEBUG] User orders query:', {
+    count: userOrders?.length || 0,
+    orders: userOrders?.map(o => ({ order_number: o.order_number, status: o.status })),
+    error: userOrdersError
+  })
+
   // Also get guest orders with matching email (not yet associated)
-  const { data: guestOrders } = await supabase
+  const { data: guestOrders, error: guestOrdersError } = await supabase
     .from('orders')
     .select(`
       id,
@@ -122,10 +135,37 @@ export default async function OrdersPage() {
     .is('user_id', null)
     .order('created_at', { ascending: false })
 
+  // DEBUG: Log guest orders result
+  console.log('🔍 [DEBUG] Guest orders query:', {
+    count: guestOrders?.length || 0,
+    orders: guestOrders?.map(o => ({
+      order_number: o.order_number,
+      status: o.status,
+      shipping_address: o.shipping_address
+    })),
+    error: guestOrdersError
+  })
+
   // Filter guest orders by email and merge with user orders
   const guestOrdersForUser = (guestOrders || []).filter(order => {
     const shippingEmail = (order.shipping_address as { email?: string })?.email
-    return shippingEmail?.toLowerCase() === user.email?.toLowerCase()
+    const matches = shippingEmail?.toLowerCase() === user.email?.toLowerCase()
+
+    // DEBUG: Log email matching
+    console.log('🔍 [DEBUG] Email matching for order:', {
+      order_number: order.order_number,
+      shippingEmail,
+      userEmail: user.email,
+      matches
+    })
+
+    return matches
+  })
+
+  // DEBUG: Log filtered guest orders
+  console.log('🔍 [DEBUG] Guest orders matched by email:', {
+    count: guestOrdersForUser.length,
+    orders: guestOrdersForUser.map(o => o.order_number)
   })
 
   // Merge and deduplicate by order_number
@@ -134,6 +174,12 @@ export default async function OrdersPage() {
     index === self.findIndex(o => o.order_number === order.order_number)
   )
   const typedOrders = uniqueOrders as Order[]
+
+  // DEBUG: Log final result
+  console.log('🔍 [DEBUG] Final orders to display:', {
+    totalCount: typedOrders.length,
+    orders: typedOrders.map(o => ({ order_number: o.order_number, status: o.status }))
+  })
 
   return (
     <div className="space-y-6">
