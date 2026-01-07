@@ -33,6 +33,7 @@ export interface ShippingEmailData {
   customerEmail: string
   trackingNumber: string
   carrier: string
+  trackingUrl?: string | null
 }
 
 export interface WelcomeEmailData {
