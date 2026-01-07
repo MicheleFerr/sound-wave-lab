@@ -424,6 +424,39 @@ function CheckoutContent() {
                     </div>
                   </div>
                 </div>
+
+                {/* Admin Test Card Helper - Only visible for admin@soundwavelab.it */}
+                {form.email === 'admin@soundwavelab.it' && (
+                  <div className="bg-blue-50 border-2 border-blue-300 p-6 animate-pulse">
+                    <div className="flex items-center gap-2 mb-4">
+                      <CreditCard className="h-5 w-5 text-blue-600" />
+                      <p className="text-label-caps text-[10px] text-blue-600">ADMIN - CARTA TEST STRIPE</p>
+                    </div>
+                    <div className="space-y-3 text-sm">
+                      <div>
+                        <p className="text-xs text-blue-600 mb-1">Numero Carta</p>
+                        <p className="font-mono font-bold text-blue-900">4242 4242 4242 4242</p>
+                      </div>
+                      <div className="grid grid-cols-3 gap-4">
+                        <div>
+                          <p className="text-xs text-blue-600 mb-1">Scadenza</p>
+                          <p className="font-mono font-bold text-blue-900">12/28</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-blue-600 mb-1">CVV</p>
+                          <p className="font-mono font-bold text-blue-900">123</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-blue-600 mb-1">CAP</p>
+                          <p className="font-mono font-bold text-blue-900">12345</p>
+                        </div>
+                      </div>
+                      <p className="text-[10px] text-blue-600 pt-2 border-t border-blue-200">
+                        ✅ Questi dati sono visibili solo per admin@soundwavelab.it
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Order Summary */}
