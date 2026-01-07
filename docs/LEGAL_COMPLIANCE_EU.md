@@ -1,7 +1,7 @@
 # Legal Compliance - EU E-commerce Regulations
 
 **Ultima Revisione**: 2026-01-07
-**Status Compliance**: ✅ **CONFORME** (requisiti base implementati)
+**Status Compliance**: ✅ **CONFORME** (requisiti base + webhooks implementati)
 **Leggi Applicabili**: Direttive EU 2011/83/EU, 2024/825
 
 ---
@@ -58,6 +58,42 @@
 - `refund_reason`: Motivo fornito da admin
 - `performed_by`: Chi ha eseguito il rimborso
 - `timestamp`: Data e ora esatta (ISO 8601)
+
+---
+
+### Sistema Webhook Stripe (Real-Time Sync)
+
+**Endpoint**: `POST /api/webhooks/stripe`
+
+**Eventi Gestiti**:
+- ✅ `charge.refunded`: Aggiorna status ordine quando charge rimborsato
+- ✅ `refund.succeeded`: Invia email cliente + log activity
+- ✅ `refund.failed`: Log fallimento con alert flag per admin
+
+**Funzionalità Compliance**:
+- ✅ Sincronizzazione real-time status ordine
+- ✅ Email automatica cliente su refund.succeeded
+- ✅ Audit trail completo per tutti gli eventi
+- ✅ Rilevamento refund parziali vs totali
+- ✅ Alert admin per refund falliti
+
+**Workflow Automatico**:
+```
+1. Admin esegue refund → Stripe processa
+2. Stripe invia webhook refund.succeeded
+3. Sistema aggiorna order.status = 'refunded'
+4. Sistema crea log in order_activity_log
+5. Sistema invia email OrderRefunded a cliente
+6. Cliente riceve notifica entro 2 minuti
+```
+
+**Gestione Errori**:
+- Webhook signature verificata (security)
+- Errori loggati con dettagli completi
+- Failed refund loggati con `alert_admin: true`
+- Order non trovato → error log, no crash
+
+**Implementato**: 2026-01-07
 
 ---
 
@@ -165,13 +201,14 @@ created_at: TIMESTAMPTZ (timezone-aware)
 
 ### ⏳ Da Implementare (P1)
 
-| Requisito | Priorità | Note |
-|-----------|----------|------|
-| Customer-facing withdrawal button | P1 | Auto-approval entro 14gg |
-| Stripe webhook refund.succeeded | P1 | Sync status automatico |
-| Stripe webhook refund.failed | P1 | Alert admin |
-| Refund reason dropdown | P2 | Standardize motivi |
-| Cancellation analytics | P2 | Tracking KPI |
+| Requisito | Priorità | Status | Note |
+|-----------|----------|--------|------|
+| Customer-facing withdrawal button | P1 | ⏳ Pending | Auto-approval entro 14gg |
+| Stripe webhook refund.succeeded | P1 | ✅ Implemented | Sync status automatico + email |
+| Stripe webhook refund.failed | P1 | ✅ Implemented | Alert admin in logs |
+| Stripe webhook charge.refunded | P1 | ✅ Implemented | Backup event handler |
+| Refund reason dropdown | P2 | ⏳ Pending | Standardize motivi |
+| Cancellation analytics | P2 | ⏳ Pending | Tracking KPI |
 
 ---
 
@@ -187,11 +224,7 @@ created_at: TIMESTAMPTZ (timezone-aware)
    - Attualmente solo admin può cancellare
    - **Rischio**: Cliente deve contattare supporto
    - **Mitigazione**: Implementare pulsante "Richiedi recesso" (P1)
-
-2. **Webhook Sync**:
-   - Refund status non sincronizzato in real-time
-   - **Rischio**: Status ordine potrebbe essere outdated
-   - **Mitigazione**: Implementare webhook handlers (P1)
+   - **Status**: ⏳ Da implementare
 
 ### BASSO Priorità
 
